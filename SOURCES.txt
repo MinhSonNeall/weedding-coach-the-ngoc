@@ -3,7 +3,10 @@ THIỆP CƯỚI MINH ANH & HOÀNG NAM — BẢN THAM KHẢO
 Cách mở: mở index.html bằng Chrome, Edge, Safari hoặc Firefox.
 Giữ index.html, styles.css, script.js và thư mục assets cạnh nhau.
 Ảnh và nhạc đã tải về máy; Google Fonts cần Internet, có font dự phòng.
-Nhạc phát sau khi nhấn “Mở lời mời” hoặc nút nhạc ở góc dưới bên trái.
+Trang thử phát nhạc ngay khi mở. Nếu trình duyệt chặn tự phát âm thanh,
+nhạc sẽ bắt đầu khi khách chạm, nhấp hoặc nhấn phím lần đầu trên trang.
+Nút nhạc ở góc dưới bên trái cho phép tạm dừng/phát tiếp. Sau khi khách
+tạm dừng, các lần chạm hoặc mở lời mời sẽ không tự bật lại nhạc.
 Tên, ảnh, câu chuyện, ngày và địa điểm là nội dung minh họa.
 Form RSVP chỉ lưu ở localStorage trên thiết bị hiện tại, chưa gửi phản hồi đi.
 Muốn nhận phản hồi thực tế, cần nối form với dịch vụ hoặc backend của bạn.

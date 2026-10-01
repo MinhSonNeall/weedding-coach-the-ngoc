@@ -123,8 +123,18 @@ const music = $("#background-music");
 const musicButton = $("#music-toggle");
 music.volume = 0.35;
 let musicLoading = false;
+let musicPausedByUser = false;
+let musicNeedsInteraction = false;
+const musicActivationEvents = ["click", "touchend", "keydown"];
+
+function stopMusicActivationListeners() {
+  musicActivationEvents.forEach((eventName) => {
+    document.removeEventListener(eventName, activateMusic);
+  });
+}
+
 function updateMusicUI() {
-  const playing = !music.paused;
+  const playing = !music.paused && !music.error;
   musicButton.classList.toggle("is-playing", playing);
   musicButton.setAttribute("aria-pressed", String(playing));
   musicButton.setAttribute(
@@ -133,20 +143,35 @@ function updateMusicUI() {
   );
   $(".music-text strong").textContent = playing
     ? "Giai điệu của chúng mình"
-    : "Một chút nhạc nhé?";
+    : musicNeedsInteraction
+      ? "Chạm để nghe nhạc nhé"
+      : "Một chút nhạc nhé?";
   $(".music-text small").textContent = playing
     ? "Canon in D · Nhấn để tạm dừng"
-    : "Canon in D · Nhấn để nghe";
+    : musicLoading
+      ? "Đang mở giai điệu…"
+      : musicNeedsInteraction
+        ? "Chạm bất kỳ đâu để bật nhạc"
+        : "Canon in D · Nhấn để nghe";
 }
-async function startMusic() {
-  if (musicLoading || !music.paused) return;
+async function startMusic({ automatic = false } = {}) {
+  if (automatic && musicPausedByUser) return;
+  if (!music.paused) {
+    stopMusicActivationListeners();
+    updateMusicUI();
+    return;
+  }
+  if (musicLoading) return;
   musicLoading = true;
   musicButton.setAttribute("aria-busy", "true");
-  $(".music-text small").textContent = "Đang mở giai điệu…";
+  updateMusicUI();
   try {
     await music.play();
+    musicNeedsInteraction = false;
   } catch (error) {
-    if (error.name !== "AbortError")
+    // A blocked autoplay attempt is expected on fresh mobile/browser visits.
+    if (error.name === "NotAllowedError") musicNeedsInteraction = true;
+    else if (!automatic && error.name !== "AbortError")
       toast("Chưa mở được nhạc. Bạn nhấn nút nhạc để thử lại nhé.");
   } finally {
     musicLoading = false;
@@ -155,14 +180,53 @@ async function startMusic() {
   }
 }
 musicButton.addEventListener("click", () => {
-  if (musicLoading || !music.paused) music.pause();
-  else startMusic();
+  if (musicLoading || !music.paused) {
+    musicPausedByUser = true;
+    musicNeedsInteraction = false;
+    music.autoplay = false;
+    stopMusicActivationListeners();
+    music.pause();
+    updateMusicUI();
+  } else {
+    musicPausedByUser = false;
+    startMusic();
+  }
 });
-music.addEventListener("play", updateMusicUI);
+music.addEventListener("play", () => {
+  if (musicPausedByUser) {
+    music.pause();
+    return;
+  }
+  musicNeedsInteraction = false;
+  stopMusicActivationListeners();
+  updateMusicUI();
+});
 music.addEventListener("pause", updateMusicUI);
 music.addEventListener("error", () => {
   updateMusicUI();
 });
+
+function activateMusic(event) {
+  if (
+    !event.isTrusted ||
+    musicPausedByUser ||
+    event.target.closest?.("#music-toggle") ||
+    (event.type === "keydown" &&
+      (event.repeat ||
+        event.ctrlKey ||
+        event.altKey ||
+        event.metaKey ||
+        ["Escape", "Shift", "Control", "Alt", "Meta"].includes(event.key)))
+  )
+    return;
+  // Call play() inside the gesture handler, without a timer or network await.
+  startMusic({ automatic: true });
+}
+musicActivationEvents.forEach((eventName) => {
+  document.addEventListener(eventName, activateMusic, { passive: true });
+});
+// Try immediately; if blocked, the first real tap/click/key retries playback.
+startMusic({ automatic: true });
 
 function openDialog(dialog) {
   closeMenu();
@@ -188,7 +252,6 @@ $$("dialog").forEach((dialog) => {
 });
 $("#open-invitation").addEventListener("click", () => {
   openDialog($("#invitation-dialog"));
-  startMusic(); // Playback starts only after the guest's explicit click.
 });
 function closeLetterAndVisit(id) {
   $("#invitation-dialog").close();
