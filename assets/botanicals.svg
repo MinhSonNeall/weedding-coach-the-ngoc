@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 640" fill="none">
+  <defs>
+    <radialGradient id="petal"><stop stop-color="#c66c80"/><stop offset=".57" stop-color="#e8aab6"/><stop offset="1" stop-color="#f7d6da"/></radialGradient>
+    <radialGradient id="blush"><stop stop-color="#ce8595"/><stop offset=".6" stop-color="#f2c6ce"/><stop offset="1" stop-color="#ffe7e7"/></radialGradient>
+    <linearGradient id="leaf"><stop stop-color="#88917c"/><stop offset="1" stop-color="#bec1a7"/></linearGradient>
+    <g id="leaflet" stroke="#8d947e" stroke-width=".8"><path d="M0 0C-24-20-24-58-9-82C19-60 27-25 0 0Z" fill="url(#leaf)"/><path d="M0 0-9-75M-3-23-17-40M-5-39 6-58M-7-54-17-65"/></g>
+    <g id="sprig" stroke="#9ca18c" stroke-width="2"><path d="M0 0C-18-68-1-130 30-199"/><use href="#leaflet" transform="translate(-7 -30) rotate(-51) scale(.7)"/><use href="#leaflet" transform="translate(-7 -60) rotate(47) scale(.65)"/><use href="#leaflet" transform="translate(-3 -94) rotate(-41) scale(.6)"/><use href="#leaflet" transform="translate(4 -120) rotate(41) scale(.5)"/><use href="#leaflet" transform="translate(17 -158) rotate(20) scale(.53)"/></g>
+    <path id="p" d="M0 5C-18 1-54-11-56-38C-60-54-41-68-31-58C-34-80-5-87 5-72C18-85 40-68 31-52C61-58 66-29 48-17C30-5 13 3 0 5Z" fill="url(#petal)" stroke="#c98596" stroke-width=".8"/>
+    <g id="rose">
+      <use href="#p" transform="rotate(0) translate(0 -13)"/><use href="#p" transform="rotate(72) translate(0 -13)"/><use href="#p" transform="rotate(144) translate(0 -13)"/><use href="#p" transform="rotate(216) translate(0 -13)"/><use href="#p" transform="rotate(288) translate(0 -13)"/>
+      <g transform="rotate(30) scale(.72)"><use href="#p"/><use href="#p" transform="rotate(72)"/><use href="#p" transform="rotate(144)"/><use href="#p" transform="rotate(216)"/><use href="#p" transform="rotate(288)"/></g>
+      <g transform="rotate(5) scale(.43)"><use href="#p"/><use href="#p" transform="rotate(90)"/><use href="#p" transform="rotate(180)"/><use href="#p" transform="rotate(270)"/></g>
+      <path d="M-16-7C-9-29 21-20 18-2C15 14-10 15-12 1C-13-9 4-14 9-5C14 5-2 7-4 0" stroke="#b66a80" stroke-width="2"/>
+      <g stroke="#c58a98" stroke-width=".65" opacity=".75"><path d="M-55-53Q-30-52-17-25M-62-26Q-40-30-29-17M22-72Q10-57 7-35M49-38Q32-32 25-21M67 11Q44 10 29 4M35 59Q25 41 17 29M-15 67Q-5 43-8 29M-63 31Q-40 18-27 17"/></g>
+    </g>
+    <g id="smallflower" fill="url(#blush)" stroke="#d19aa5" stroke-width=".7"><path d="M0 0C-40-17-32-50-9-40C4-71 35-42 16-19C55-31 61 11 22 16C35 54-9 61-13 21C-50 40-63 1-28-9Z"/><circle r="9" fill="#bd9290"/><path d="m-6-5 10 10M-4 6 8-11M-10 0H11" stroke="#f6dcad" stroke-width="3"/></g>
+  </defs>
+  <g opacity=".95">
+    <path d="M267 612C232 461 249 327 188 154M260 557C334 421 346 290 391 138M250 504C160 433 101 328 73 213" stroke="#91947b" stroke-width="3"/>
+    <use href="#sprig" transform="translate(234 393) rotate(-40) scale(1.12)"/><use href="#sprig" transform="translate(293 366) rotate(37)"/><use href="#sprig" transform="translate(194 268) rotate(-16)"/><use href="#sprig" transform="translate(283 509) rotate(78) scale(.8)"/><use href="#sprig" transform="translate(256 577) rotate(-54) scale(.85)"/><use href="#sprig" transform="translate(343 244) rotate(35) scale(.7)"/>
+    <g stroke="#b6a68b" stroke-width="1.2"><path d="M167 355Q80 285 36 273M124 331Q71 296 51 315M295 318Q377 248 419 253M205 243Q252 134 247 104"/><g fill="#f4dfce"><circle cx="36" cy="273" r="5"/><circle cx="51" cy="315" r="6"/><circle cx="419" cy="253" r="5"/><circle cx="247" cy="104" r="5"/><circle cx="244" cy="125" r="4"/><circle cx="400" cy="260" r="4"/></g></g>
+    <use href="#smallflower" transform="translate(174 196) rotate(-20) scale(.8)"/>
+    <use href="#rose" transform="translate(301 265) rotate(24) scale(.72)"/>
+    <use href="#rose" transform="translate(157 323) rotate(-18) scale(.93)"/>
+    <use href="#rose" transform="translate(274 405) rotate(38) scale(1.08)"/>
+    <use href="#smallflower" transform="translate(365 355) rotate(25) scale(.7)"/>
+    <use href="#smallflower" transform="translate(155 445) rotate(-10) scale(.75)"/>
+    <use href="#rose" transform="translate(220 508) rotate(-10) scale(.47)"/>
+  </g>
+</svg>

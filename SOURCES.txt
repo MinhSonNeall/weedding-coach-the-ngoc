@@ -1,0 +1,50 @@
+THIỆP CƯỚI MINH ANH & HOÀNG NAM — BẢN THAM KHẢO
+
+Cách mở: mở index.html bằng Chrome, Edge, Safari hoặc Firefox.
+Giữ index.html, styles.css, script.js và thư mục assets cạnh nhau.
+Ảnh và nhạc đã tải về máy; Google Fonts cần Internet, có font dự phòng.
+Nhạc phát sau khi nhấn “Mở lời mời” hoặc nút nhạc ở góc dưới bên trái.
+Tên, ảnh, câu chuyện, ngày và địa điểm là nội dung minh họa.
+Form RSVP chỉ lưu ở localStorage trên thiết bị hiện tại, chưa gửi phản hồi đi.
+Muốn nhận phản hồi thực tế, cần nối form với dịch vụ hoặc backend của bạn.
+
+THAM KHẢO THIẾT KẾ (không sao chép code hay tải bộ template)
+Amorette: https://www.framer.com/marketplace/templates/amorette/
+Motion Stamp Romantic Pink: https://motionstamp.com/collections/online-wedding-invitations/products/romantic-wedding-invitation
+Phong cách tham khảo: giấy màu hồng, hoa, chữ serif và script, chuyển động nhẹ.
+Code HTML/CSS/JS và họa tiết SVG được viết riêng cho bản mẫu này.
+
+ẢNH — UNSPLASH
+License: https://unsplash.com/license
+assets/floral-couple.jpg — Jonathan Borba
+https://unsplash.com/photos/V1IbDYcW5kc
+https://images.unsplash.com/photo-1563808599816-a9e266f941b6
+assets/flowers.jpg — Photos by Lanty
+https://unsplash.com/photos/0cfLnX9Tdlc
+https://images.unsplash.com/photo-1530738668449-74a0ef8c17ff
+assets/couple.jpg
+https://images.unsplash.com/photo-1519741497674-611481863552
+assets/wedding.jpg
+https://images.unsplash.com/photo-1511285560929-80b456fea0bc
+assets/bouquet.jpg (khung cảnh lễ cưới ngoài trời)
+https://images.unsplash.com/photo-1523438885200-e635ba2c371e
+Ảnh tải về bằng tham số resize/quality, hiển thị với crop và filter CSS.
+
+ÂM NHẠC
+“Canon in D Major” Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+https://creativecommons.org/licenses/by/4.0/
+Thông tin bản nhạc và ghi nguồn theo trang tác giả:
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100301
+Tệp gốc, không chỉnh sửa:
+https://incompetech.com/music/royalty-free/mp3-royaltyfree/Canon%20in%20D%20Major.mp3
+
+FONT
+Google Fonts: Be Vietnam Pro, Playfair Display, Great Vibes.
+https://fonts.google.com/
+
+CHỈNH SỬA
+index.html: tên cô dâu chú rể, câu chuyện, ngày, giờ, địa điểm, bản đồ.
+styles.css: bảng màu trong :root, responsive và animation.
+script.js: WEDDING.date/end cho đếm ngược và lịch tải xuống.
+assets/: thay ảnh và nhạc bằng tệp cá nhân của bạn.
