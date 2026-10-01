@@ -121,11 +121,69 @@ window.matchMedia("(min-width: 701px)").addEventListener("change", (event) => {
 
 const music = $("#background-music");
 const musicButton = $("#music-toggle");
+const musicPreferenceKey = `${WEDDING.storageKey}-music`;
+const musicPositionKey = `${WEDDING.storageKey}-music-position`;
 music.volume = 0.35;
 let musicLoading = false;
 let musicPausedByUser = false;
 let musicNeedsInteraction = false;
+let musicResumePosition = 0;
+let musicPositionRestored = false;
 const musicActivationEvents = ["click", "touchend", "keydown"];
+
+try {
+  musicPausedByUser = localStorage.getItem(musicPreferenceKey) === "off";
+} catch {
+  // Music still works when browser storage is unavailable.
+}
+try {
+  const position = Number(sessionStorage.getItem(musicPositionKey));
+  if (Number.isFinite(position) && position > 0) musicResumePosition = position;
+} catch {}
+music.autoplay = !musicPausedByUser;
+
+function rememberMusicPreference(enabled) {
+  try {
+    localStorage.setItem(musicPreferenceKey, enabled ? "on" : "off");
+  } catch {}
+}
+
+function rememberMusicPosition() {
+  if (
+    !musicPositionRestored ||
+    music.readyState < 1 ||
+    !Number.isFinite(music.currentTime)
+  )
+    return;
+  try {
+    sessionStorage.setItem(musicPositionKey, String(music.currentTime));
+  } catch {}
+}
+
+function restoreMusicPosition() {
+  try {
+    if (musicResumePosition > 0 && musicResumePosition < music.duration) {
+      music.currentTime = musicResumePosition;
+    }
+  } catch {}
+  musicPositionRestored = true;
+}
+if (music.readyState >= 1) restoreMusicPosition();
+else
+  music.addEventListener("loadedmetadata", restoreMusicPosition, {
+    once: true,
+  });
+
+let lastMusicPositionSave = 0;
+music.addEventListener("timeupdate", () => {
+  if (Date.now() - lastMusicPositionSave < 1000) return;
+  lastMusicPositionSave = Date.now();
+  rememberMusicPosition();
+});
+window.addEventListener("pagehide", rememberMusicPosition);
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) rememberMusicPosition();
+});
 
 function stopMusicActivationListeners() {
   musicActivationEvents.forEach((eventName) => {
@@ -141,6 +199,11 @@ function updateMusicUI() {
     "aria-label",
     playing ? "Tắt nhạc nền" : "Bật nhạc nền",
   );
+  musicButton.title = musicNeedsInteraction
+    ? "Trình duyệt đang chặn tự phát âm thanh. Chạm vào trang để nghe nhạc."
+    : playing
+      ? "Tạm dừng nhạc nền"
+      : "Bật nhạc nền";
   $(".music-text strong").textContent = playing
     ? "Giai điệu của chúng mình"
     : musicNeedsInteraction
@@ -182,6 +245,7 @@ async function startMusic({ automatic = false } = {}) {
 musicButton.addEventListener("click", () => {
   if (musicLoading || !music.paused) {
     musicPausedByUser = true;
+    rememberMusicPreference(false);
     musicNeedsInteraction = false;
     music.autoplay = false;
     stopMusicActivationListeners();
@@ -189,6 +253,7 @@ musicButton.addEventListener("click", () => {
     updateMusicUI();
   } else {
     musicPausedByUser = false;
+    rememberMusicPreference(true);
     startMusic();
   }
 });
@@ -198,10 +263,14 @@ music.addEventListener("play", () => {
     return;
   }
   musicNeedsInteraction = false;
+  rememberMusicPreference(true);
   stopMusicActivationListeners();
   updateMusicUI();
 });
-music.addEventListener("pause", updateMusicUI);
+music.addEventListener("pause", () => {
+  rememberMusicPosition();
+  updateMusicUI();
+});
 music.addEventListener("error", () => {
   updateMusicUI();
 });
@@ -222,11 +291,16 @@ function activateMusic(event) {
   // Call play() inside the gesture handler, without a timer or network await.
   startMusic({ automatic: true });
 }
-musicActivationEvents.forEach((eventName) => {
-  document.addEventListener(eventName, activateMusic, { passive: true });
+if (!musicPausedByUser) {
+  musicActivationEvents.forEach((eventName) => {
+    document.addEventListener(eventName, activateMusic, { passive: true });
+  });
+  // Restore playback on entry/reload; stored preferences never bypass browser policy.
+  startMusic({ automatic: true });
+} else updateMusicUI();
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) startMusic({ automatic: true });
 });
-// Try immediately; if blocked, the first real tap/click/key retries playback.
-startMusic({ automatic: true });
 
 function openDialog(dialog) {
   closeMenu();
