@@ -1,79 +1,184 @@
 "use strict";
-
-/* THAY THÔNG TIN THIỆP:
-   1. Sửa tên, ngày, địa điểm và câu chuyện hiển thị trong index.html.
-   2. Cập nhật ngày và lịch hẹn bên dưới (múi giờ Việt Nam: +07:00).
-   3. Thay ảnh/nhạc trong assets; giữ ghi nguồn khi dùng bản nhạc hiện tại.
-   Đây là bản HTML tĩnh: RSVP chỉ lưu ở trình duyệt, chưa có máy chủ nhận phản hồi.
-*/
+const $ = (s, root = document) => root.querySelector(s);
+const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const WEDDING = {
-  date: "2026-12-20T17:30:00+07:00",
-  end: "2026-12-20T21:00:00+07:00",
-  title: "Lễ cưới Minh Anh & Hoàng Nam",
-  location: "The Adora Center, 431 Hoàng Văn Thụ, TP. Hồ Chí Minh",
+  date: "2026-11-07T17:15:00+07:00",
+  title: "Lễ cưới Thế Ngọc & Hương Ly",
+  location:
+    "Khu bể bơi Serenity, tầng 1, Khách sạn Hà Nội Daewoo, 360 Kim Mã, Giảng Võ, Hà Nội",
   description:
-    "Đón khách 17:30. Lễ thành hôn 18:00. Khai tiệc 18:30. Hẹn gặp bạn!",
-  storageKey: "minhanh-hoangnam-wedding-demo-v1",
+    "15h: Lễ thân mật cùng gia đình. 17h15–17h30: Đón khách tiệc cưới. 18h: Nghi lễ đính hôn. 19h: Cô dâu chú rể khiêu vũ. 19h30: Giao lưu và tung hoa.",
 };
-
-const $ = (selector, root = document) => root.querySelector(selector);
-const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-let toastTimeout;
-
+let toastTimer;
 function toast(message) {
-  const element = $("#toast");
-  element.textContent = message;
-  element.classList.add("show");
-  window.clearTimeout(toastTimeout);
-  toastTimeout = window.setTimeout(
-    () => element.classList.remove("show"),
-    4500,
-  );
+  $("#toast").textContent = message;
+  $("#toast").classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => $("#toast").classList.remove("show"), 5000);
+}
+function readStorage(kind, key) {
+  try {
+    return window[kind].getItem(key);
+  } catch {
+    return null;
+  }
+}
+function writeStorage(kind, key, value) {
+  try {
+    window[kind].setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
-// Finite number of lightweight petals; no animation work while the tab is hidden.
-function createPetals() {
-  const container = $("#petals");
-  container.replaceChildren();
-  if (motionPreference.matches) return;
-  const fragment = document.createDocumentFragment();
-  for (let index = 0; index < 11; index++) {
-    const petal = document.createElement("span");
-    petal.className = "petal";
-    petal.style.setProperty("--left", `${(index * 9.1 + 3) % 100}%`);
-    petal.style.setProperty("--duration", `${15 + (index % 5) * 2}s`);
-    petal.style.setProperty("--delay", `${-index * 3.7}s`);
-    if (index % 3 === 0) petal.style.width = "7px";
-    fragment.append(petal);
-  }
-  container.append(fragment);
+// Explicit pause wins over all automatic retries. A browser may require a gesture.
+const audio = $("#background-music");
+const musicButton = $("#music-toggle");
+const musicKey = "ly-ngoc-music-enabled-v1";
+const positionKey = "ly-ngoc-mot-doi-position-v1";
+let musicEnabled = readStorage("localStorage", musicKey) !== "false";
+let starting = false;
+let audioFailed = false;
+audio.volume = 0.4;
+audio.autoplay = musicEnabled;
+function musicState(playing, blocked = false) {
+  musicButton.classList.toggle("is-playing", playing);
+  musicButton.setAttribute("aria-pressed", String(playing));
+  musicButton.setAttribute(
+    "aria-label",
+    playing ? "Tạm dừng nhạc một đời" : "Bật nhạc một đời",
+  );
+  $("#music-status").textContent = audioFailed
+    ? "Nhạc chưa tải được · chạm để thử lại"
+    : blocked
+      ? "Nhạc sẽ vang lên khi bạn chạm vào thiệp"
+      : playing
+        ? "14 Casper · Bon Nghiêm · buitruonglinh"
+        : "Đã tạm dừng · chạm để nghe tiếp";
 }
-createPetals();
-motionPreference.addEventListener("change", createPetals);
+async function startMusic() {
+  if (!musicEnabled || starting || !audio.paused) return;
+  starting = true;
+  try {
+    await audio.play();
+    if (!musicEnabled) audio.pause();
+  } catch (error) {
+    if (error.name === "NotAllowedError") musicState(false, true);
+    else if (error.name !== "AbortError") {
+      audioFailed = true;
+      musicState(false);
+    }
+  } finally {
+    starting = false;
+  }
+}
+audio.addEventListener("loadedmetadata", () => {
+  const last = Number(readStorage("sessionStorage", positionKey));
+  if (Number.isFinite(last) && last > 0 && last < audio.duration - 1)
+    audio.currentTime = last;
+  startMusic();
+});
+audio.addEventListener("playing", () => {
+  audioFailed = false;
+  if (!musicEnabled) audio.pause();
+  else musicState(true);
+});
+audio.addEventListener("pause", () => musicState(false));
+audio.addEventListener("error", () => {
+  audioFailed = true;
+  musicState(false);
+});
+audio.addEventListener("canplay", startMusic);
+let savedAt = 0;
+audio.addEventListener("timeupdate", () => {
+  if (Date.now() - savedAt > 2000) {
+    writeStorage("sessionStorage", positionKey, String(audio.currentTime));
+    savedAt = Date.now();
+  }
+});
+window.addEventListener("pagehide", () =>
+  writeStorage("sessionStorage", positionKey, String(audio.currentTime)),
+);
+musicButton.addEventListener("click", () => {
+  if (!audio.paused) {
+    musicEnabled = false;
+    audio.pause();
+  } else {
+    musicEnabled = true;
+    audioFailed = false;
+    if (audio.error) audio.load();
+    startMusic();
+  }
+  writeStorage("localStorage", musicKey, String(musicEnabled));
+});
+function unlockMusic(event) {
+  if (event.target instanceof Element && event.target.closest("#music-toggle"))
+    return;
+  startMusic();
+}
+["pointerdown", "touchend", "keydown"].forEach((event) =>
+  document.addEventListener(event, unlockMusic, { passive: true }),
+);
 document.addEventListener("visibilitychange", () => {
-  $$(".petal").forEach((petal) => {
-    petal.style.animationPlayState = document.hidden ? "paused" : "running";
-  });
+  if (!document.hidden && musicEnabled) startMusic();
+});
+if (musicEnabled) startMusic();
+else musicState(false);
+
+const menu = $(".menu-toggle");
+function closeMenu() {
+  menu.setAttribute("aria-expanded", "false");
+  menu.setAttribute("aria-label", "Mở menu");
+  $("#mobile-nav").hidden = true;
+}
+menu.addEventListener("click", () => {
+  const open = menu.getAttribute("aria-expanded") !== "true";
+  menu.setAttribute("aria-expanded", String(open));
+  menu.setAttribute("aria-label", open ? "Đóng menu" : "Mở menu");
+  $("#mobile-nav").hidden = !open;
+});
+$$("#mobile-nav a").forEach((a) => a.addEventListener("click", closeMenu));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !$("#mobile-nav").hidden) {
+    closeMenu();
+    menu.focus();
+  }
+});
+window.matchMedia("(min-width: 801px)").addEventListener("change", (event) => {
+  if (event.matches) closeMenu();
 });
 
-if ("IntersectionObserver" in window) {
+const motion = matchMedia("(prefers-reduced-motion: reduce)");
+if ("IntersectionObserver" in window && !motion.matches) {
   document.documentElement.classList.add("motion-ready");
   const observer = new IntersectionObserver(
-    (entries) => {
+    (entries) =>
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("is-visible");
           observer.unobserve(entry.target);
         }
-      });
-    },
-    { threshold: 0.08, rootMargin: "0px 0px -20px 0px" },
+      }),
+    { threshold: 0.08 },
   );
   $$(".reveal").forEach((element) => observer.observe(element));
 }
-
-function updateCountdown() {
+if ("IntersectionObserver" in window) {
+  const sectionObserver = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((entry) => {
+        if (entry.isIntersecting)
+          $$(".desktop-nav a").forEach((a) =>
+            a.classList.toggle("active", a.hash === `#${entry.target.id}`),
+          );
+      }),
+    { rootMargin: "-20% 0px -55% 0px" },
+  );
+  $$("main section[id]").forEach((section) => sectionObserver.observe(section));
+}
+let countdownInterval;
+function countdown() {
   const remaining = Math.max(0, new Date(WEDDING.date).getTime() - Date.now());
   const units = {
     days: Math.floor(remaining / 86400000),
@@ -81,285 +186,61 @@ function updateCountdown() {
     minutes: Math.floor(remaining / 60000) % 60,
     seconds: Math.floor(remaining / 1000) % 60,
   };
-  Object.entries(units).forEach(([id, value]) => {
-    $(`#${id}`).textContent = String(value).padStart(2, "0");
-  });
-  if (remaining === 0) {
-    $("#countdown-title").textContent = "Ngày chung đôi đã đến!";
-    $(".countdown").setAttribute("aria-label", "Ngày cưới đã đến");
-  }
-}
-updateCountdown();
-window.setInterval(updateCountdown, 1000);
-
-const menuButton = $(".menu-toggle");
-const mobileNav = $("#mobile-nav");
-function closeMenu() {
-  mobileNav.hidden = true;
-  menuButton.setAttribute("aria-expanded", "false");
-  menuButton.setAttribute("aria-label", "Mở menu");
-}
-menuButton.addEventListener("click", () => {
-  const opening = menuButton.getAttribute("aria-expanded") !== "true";
-  mobileNav.hidden = !opening;
-  menuButton.setAttribute("aria-expanded", String(opening));
-  menuButton.setAttribute("aria-label", opening ? "Đóng menu" : "Mở menu");
-});
-$$("a", mobileNav).forEach((link) => link.addEventListener("click", closeMenu));
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !mobileNav.hidden) {
-    closeMenu();
-    menuButton.focus();
-  }
-});
-document.addEventListener("click", (event) => {
-  if (!$(".site-header").contains(event.target)) closeMenu();
-});
-window.matchMedia("(min-width: 701px)").addEventListener("change", (event) => {
-  if (event.matches) closeMenu();
-});
-
-const music = $("#background-music");
-const musicButton = $("#music-toggle");
-const musicPreferenceKey = `${WEDDING.storageKey}-music`;
-const musicPositionKey = `${WEDDING.storageKey}-music-position`;
-music.volume = 0.35;
-let musicLoading = false;
-let musicPausedByUser = false;
-let musicNeedsInteraction = false;
-let musicResumePosition = 0;
-let musicPositionRestored = false;
-const musicActivationEvents = ["click", "touchend", "keydown"];
-
-try {
-  musicPausedByUser = localStorage.getItem(musicPreferenceKey) === "off";
-} catch {
-  // Music still works when browser storage is unavailable.
-}
-try {
-  const position = Number(sessionStorage.getItem(musicPositionKey));
-  if (Number.isFinite(position) && position > 0) musicResumePosition = position;
-} catch {}
-music.autoplay = !musicPausedByUser;
-
-function rememberMusicPreference(enabled) {
-  try {
-    localStorage.setItem(musicPreferenceKey, enabled ? "on" : "off");
-  } catch {}
-}
-
-function rememberMusicPosition() {
-  if (
-    !musicPositionRestored ||
-    music.readyState < 1 ||
-    !Number.isFinite(music.currentTime)
-  )
-    return;
-  try {
-    sessionStorage.setItem(musicPositionKey, String(music.currentTime));
-  } catch {}
-}
-
-function restoreMusicPosition() {
-  try {
-    if (musicResumePosition > 0 && musicResumePosition < music.duration) {
-      music.currentTime = musicResumePosition;
-    }
-  } catch {}
-  musicPositionRestored = true;
-}
-if (music.readyState >= 1) restoreMusicPosition();
-else
-  music.addEventListener("loadedmetadata", restoreMusicPosition, {
-    once: true,
-  });
-
-let lastMusicPositionSave = 0;
-music.addEventListener("timeupdate", () => {
-  if (Date.now() - lastMusicPositionSave < 1000) return;
-  lastMusicPositionSave = Date.now();
-  rememberMusicPosition();
-});
-window.addEventListener("pagehide", rememberMusicPosition);
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) rememberMusicPosition();
-});
-
-function stopMusicActivationListeners() {
-  musicActivationEvents.forEach((eventName) => {
-    document.removeEventListener(eventName, activateMusic);
-  });
-}
-
-function updateMusicUI() {
-  const playing = !music.paused && !music.error;
-  musicButton.classList.toggle("is-playing", playing);
-  musicButton.setAttribute("aria-pressed", String(playing));
-  musicButton.setAttribute(
-    "aria-label",
-    playing ? "Tắt nhạc nền" : "Bật nhạc nền",
+  Object.entries(units).forEach(
+    ([key, value]) =>
+      ($(`#${key}`).textContent = String(value).padStart(2, "0")),
   );
-  musicButton.title = musicNeedsInteraction
-    ? "Trình duyệt đang chặn tự phát âm thanh. Chạm vào trang để nghe nhạc."
-    : playing
-      ? "Tạm dừng nhạc nền"
-      : "Bật nhạc nền";
-  $(".music-text strong").textContent = playing
-    ? "Giai điệu của chúng mình"
-    : musicNeedsInteraction
-      ? "Chạm để nghe nhạc nhé"
-      : "Một chút nhạc nhé?";
-  $(".music-text small").textContent = playing
-    ? "Canon in D · Nhấn để tạm dừng"
-    : musicLoading
-      ? "Đang mở giai điệu…"
-      : musicNeedsInteraction
-        ? "Chạm bất kỳ đâu để bật nhạc"
-        : "Canon in D · Nhấn để nghe";
-}
-async function startMusic({ automatic = false } = {}) {
-  if (automatic && musicPausedByUser) return;
-  if (!music.paused) {
-    stopMusicActivationListeners();
-    updateMusicUI();
-    return;
-  }
-  if (musicLoading) return;
-  musicLoading = true;
-  musicButton.setAttribute("aria-busy", "true");
-  updateMusicUI();
-  try {
-    await music.play();
-    musicNeedsInteraction = false;
-  } catch (error) {
-    // A blocked autoplay attempt is expected on fresh mobile/browser visits.
-    if (error.name === "NotAllowedError") musicNeedsInteraction = true;
-    else if (!automatic && error.name !== "AbortError")
-      toast("Chưa mở được nhạc. Bạn nhấn nút nhạc để thử lại nhé.");
-  } finally {
-    musicLoading = false;
-    musicButton.removeAttribute("aria-busy");
-    updateMusicUI();
+  if (!remaining) {
+    $("#countdown-title").textContent = "Ngày chung đôi đã đến.";
+    clearInterval(countdownInterval);
   }
 }
-musicButton.addEventListener("click", () => {
-  if (musicLoading || !music.paused) {
-    musicPausedByUser = true;
-    rememberMusicPreference(false);
-    musicNeedsInteraction = false;
-    music.autoplay = false;
-    stopMusicActivationListeners();
-    music.pause();
-    updateMusicUI();
-  } else {
-    musicPausedByUser = false;
-    rememberMusicPreference(true);
-    startMusic();
-  }
-});
-music.addEventListener("play", () => {
-  if (musicPausedByUser) {
-    music.pause();
-    return;
-  }
-  musicNeedsInteraction = false;
-  rememberMusicPreference(true);
-  stopMusicActivationListeners();
-  updateMusicUI();
-});
-music.addEventListener("pause", () => {
-  rememberMusicPosition();
-  updateMusicUI();
-});
-music.addEventListener("error", () => {
-  updateMusicUI();
-});
-
-function activateMusic(event) {
-  if (
-    !event.isTrusted ||
-    musicPausedByUser ||
-    event.target.closest?.("#music-toggle") ||
-    (event.type === "keydown" &&
-      (event.repeat ||
-        event.ctrlKey ||
-        event.altKey ||
-        event.metaKey ||
-        ["Escape", "Shift", "Control", "Alt", "Meta"].includes(event.key)))
-  )
-    return;
-  // Call play() inside the gesture handler, without a timer or network await.
-  startMusic({ automatic: true });
-}
-if (!musicPausedByUser) {
-  musicActivationEvents.forEach((eventName) => {
-    document.addEventListener(eventName, activateMusic, { passive: true });
-  });
-  // Restore playback on entry/reload; stored preferences never bypass browser policy.
-  startMusic({ automatic: true });
-} else updateMusicUI();
-window.addEventListener("pageshow", (event) => {
-  if (event.persisted) startMusic({ automatic: true });
-});
+countdownInterval = setInterval(countdown, 1000);
+countdown();
+const guest = new URLSearchParams(location.search).get("to");
+if (guest && guest.trim())
+  $("#guest-dedication").textContent = guest.trim().slice(0, 100);
 
 function openDialog(dialog) {
-  closeMenu();
   dialog.showModal();
   document.body.classList.add("modal-open");
 }
 $$("dialog").forEach((dialog) => {
   $("[data-close]", dialog).addEventListener("click", () => dialog.close());
-  dialog.addEventListener("close", () => {
-    if (!$("dialog[open]")) document.body.classList.remove("modal-open");
-  });
+  dialog.addEventListener("close", () =>
+    document.body.classList.remove("modal-open"),
+  );
   dialog.addEventListener("click", (event) => {
-    if (event.target !== dialog) return;
-    const rect = dialog.getBoundingClientRect();
-    if (
-      event.clientX < rect.left ||
-      event.clientX > rect.right ||
-      event.clientY < rect.top ||
-      event.clientY > rect.bottom
-    )
-      dialog.close();
+    if (event.target === dialog) {
+      const r = dialog.getBoundingClientRect();
+      if (
+        event.clientX < r.left ||
+        event.clientX > r.right ||
+        event.clientY < r.top ||
+        event.clientY > r.bottom
+      )
+        dialog.close();
+    }
   });
 });
-$("#open-invitation").addEventListener("click", () => {
-  openDialog($("#invitation-dialog"));
-});
-function closeLetterAndVisit(id) {
-  $("#invitation-dialog").close();
-  const target = $(id);
-  target.scrollIntoView({
-    behavior: motionPreference.matches ? "instant" : "smooth",
-    block: "start",
-  });
-  if (id === "#rsvp") $("#guest-name").focus({ preventScroll: true });
-}
-$("#letter-rsvp").addEventListener("click", () => closeLetterAndVisit("#rsvp"));
-$("#letter-details").addEventListener("click", () =>
-  closeLetterAndVisit("#invitation"),
-);
+$("#show-map").addEventListener("click", () => openDialog($("#map-dialog")));
 $("#open-credits").addEventListener("click", () =>
   openDialog($("#credits-dialog")),
 );
-
-// Photo viewer: keyboard arrows, touch swipe, native Escape and focus trapping.
 const photos = $$(".gallery-item");
 const lightbox = $("#lightbox");
 let photoIndex = 0;
 function showPhoto(index) {
   photoIndex = (index + photos.length) % photos.length;
-  const button = photos[photoIndex];
-  const original = $("img", button);
+  const original = $("img", photos[photoIndex]);
   $("#lightbox-image").src = original.src;
   $("#lightbox-image").alt = original.alt;
-  $("#lightbox-caption").textContent = button.dataset.caption;
+  $("#lightbox-caption").textContent = photos[photoIndex].dataset.caption;
   $("#lightbox-counter").textContent =
     `${String(photoIndex + 1).padStart(2, "0")} / ${String(photos.length).padStart(2, "0")}`;
 }
-photos.forEach((button, index) =>
-  button.addEventListener("click", () => {
+photos.forEach((photo, index) =>
+  photo.addEventListener("click", () => {
     showPhoto(index);
     openDialog(lightbox);
   }),
@@ -367,20 +248,16 @@ photos.forEach((button, index) =>
 $(".lightbox-prev").addEventListener("click", () => showPhoto(photoIndex - 1));
 $(".lightbox-next").addEventListener("click", () => showPhoto(photoIndex + 1));
 lightbox.addEventListener("keydown", (event) => {
-  if (event.key === "ArrowRight") {
+  if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
     event.preventDefault();
-    showPhoto(photoIndex + 1);
-  }
-  if (event.key === "ArrowLeft") {
-    event.preventDefault();
-    showPhoto(photoIndex - 1);
+    showPhoto(photoIndex + (event.key === "ArrowRight" ? 1 : -1));
   }
 });
-let swipeStart = null;
+let swipe = null;
 lightbox.addEventListener(
   "touchstart",
   (event) => {
-    swipeStart =
+    swipe =
       event.touches.length === 1
         ? { x: event.touches[0].clientX, y: event.touches[0].clientY }
         : null;
@@ -390,17 +267,15 @@ lightbox.addEventListener(
 lightbox.addEventListener(
   "touchend",
   (event) => {
-    if (!swipeStart) return;
-    const dx = event.changedTouches[0].clientX - swipeStart.x;
-    const dy = event.changedTouches[0].clientY - swipeStart.y;
-    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5)
+    if (!swipe) return;
+    const dx = event.changedTouches[0].clientX - swipe.x;
+    const dy = event.changedTouches[0].clientY - swipe.y;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5)
       showPhoto(photoIndex + (dx < 0 ? 1 : -1));
-    swipeStart = null;
+    swipe = null;
   },
   { passive: true },
 );
-
-// Calendar download works from file:// and a static web server without an API.
 function icsText(value) {
   return value
     .replace(/\\/g, "\\\\")
@@ -414,19 +289,19 @@ function icsDate(value) {
     .replace(/[-:]/g, "")
     .replace(/\.\d{3}/, "");
 }
-function foldCalendarLine(line) {
+function foldLine(line) {
   const encoder = new TextEncoder();
+  let current = "",
+    bytes = 0;
   const output = [];
-  let current = "";
-  let bytes = 0;
-  for (const character of line) {
-    const size = encoder.encode(character).length;
+  for (const char of line) {
+    const size = encoder.encode(char).length;
     if (bytes + size > 73) {
       output.push(current);
       current = " ";
       bytes = 1;
     }
-    current += character;
+    current += char;
     bytes += size;
   }
   output.push(current);
@@ -436,139 +311,91 @@ $("#save-date").addEventListener("click", () => {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//MinhAnhHoangNam//Wedding Invitation//VI",
+    "PRODID:-//LyNgoc//Wedding//VI",
     "CALSCALE:GREGORIAN",
     "BEGIN:VEVENT",
-    "UID:minhanh-hoangnam-20261220@wedding.example",
+    "UID:ly-ngoc-20261107@wedding.local",
     `DTSTAMP:${icsDate(Date.now())}`,
     `DTSTART:${icsDate(WEDDING.date)}`,
-    `DTEND:${icsDate(WEDDING.end)}`,
     `SUMMARY:${icsText(WEDDING.title)}`,
     `LOCATION:${icsText(WEDDING.location)}`,
     `DESCRIPTION:${icsText(WEDDING.description)}`,
     "BEGIN:VALARM",
     "TRIGGER:-P1D",
     "ACTION:DISPLAY",
-    "DESCRIPTION:Ngày mai mình có hẹn chung vui nhé!",
+    "DESCRIPTION:Ngày mai hẹn gặp Ly và Ngọc!",
     "END:VALARM",
     "END:VEVENT",
     "END:VCALENDAR",
   ];
-  const file = new Blob([lines.map(foldCalendarLine).join("\r\n") + "\r\n"], {
-    type: "text/calendar;charset=utf-8",
-  });
-  const url = URL.createObjectURL(file);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "Minh-Anh-Hoang-Nam-20-12-2026.ics";
-  document.body.append(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 10000);
-  toast("Đã tạo lịch hẹn. Mở tệp .ics vừa tải để thêm vào lịch nhé.");
+  const url = URL.createObjectURL(
+    new Blob([lines.map(foldLine).join("\r\n") + "\r\n"], {
+      type: "text/calendar;charset=utf-8",
+    }),
+  );
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "The-Ngoc-Huong-Ly-07-11-2026.ics";
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+  toast("Mở tệp lịch vừa tải để lưu ngày hẹn của chúng mình nhé.");
 });
-
-function readResponses() {
-  try {
-    const stored = JSON.parse(localStorage.getItem(WEDDING.storageKey) || "[]");
-    return Array.isArray(stored)
-      ? stored
-          .filter(
-            (item) =>
-              item &&
-              typeof item.name === "string" &&
-              typeof item.wish === "string",
-          )
-          .slice(-30)
-      : [];
-  } catch {
-    return [];
-  }
-}
-function addWish(response, prepend = true) {
-  if (!response.wish.trim()) return;
-  const card = document.createElement("article");
-  card.className = "wish-card";
-  const heart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  heart.setAttribute("class", "icon");
-  heart.setAttribute("aria-hidden", "true");
-  const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-  use.setAttribute("href", "#i-heart");
-  heart.append(use);
-  const quote = document.createElement("blockquote");
-  quote.textContent = response.wish.slice(0, 600);
-  const author = document.createElement("div");
-  const avatar = document.createElement("span");
-  avatar.className = "wish-avatar";
-  avatar.textContent =
-    [...response.name.trim()][0]?.toLocaleUpperCase("vi") || "♡";
-  const name = document.createElement("p");
-  name.append(document.createTextNode(response.name.slice(0, 80)));
-  const label = document.createElement("small");
-  label.textContent = "LỜI CHÚC TRÊN THIẾT BỊ NÀY";
-  name.append(label);
-  author.append(avatar, name);
-  card.append(heart, quote, author);
-  if (prepend) $("#wishes-list").prepend(card);
-  else $("#wishes-list").append(card);
-}
-readResponses().forEach((response) => addWish(response));
-
 const form = $("#rsvp-form");
-const result = $("#rsvp-result");
-let submitting = false;
+function updateAttendance() {
+  const coming = form.elements.attendance.value === "yes";
+  $(".guest-count-wrap").hidden = !coming;
+  $("#guest-count").disabled = !coming;
+}
 $$('input[name="attendance"]').forEach((input) =>
-  input.addEventListener("change", () => {
-    const coming = $('input[name="attendance"]:checked').value === "yes";
-    $(".guest-count-wrap").hidden = !coming;
-    $("#guest-count").disabled = !coming;
-  }),
+  input.addEventListener("change", updateAttendance),
+);
+$("#guest-name").addEventListener("input", () =>
+  $("#guest-name").setCustomValidity(""),
 );
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (submitting) return;
   const name = $("#guest-name").value.trim();
   if (!name) {
     $("#guest-name").setCustomValidity("Bạn nhập tên giúp chúng mình nhé.");
     $("#guest-name").reportValidity();
     return;
   }
-  const coming = $('input[name="attendance"]:checked').value === "yes";
   const response = {
-    name: name.slice(0, 80),
-    attendance: coming ? "yes" : "no",
-    guests: coming ? Number($("#guest-count").value) : 0,
-    wish: $("#guest-wish").value.trim().slice(0, 600),
-    createdAt: new Date().toISOString(),
+    name,
+    attendance: form.elements.attendance.value,
+    guests:
+      form.elements.attendance.value === "yes"
+        ? Number($("#guest-count").value)
+        : 0,
+    wish: $("#guest-wish").value.trim(),
+    updatedAt: new Date().toISOString(),
   };
-  let saved = true;
-  try {
-    localStorage.setItem(
-      WEDDING.storageKey,
-      JSON.stringify([...readResponses(), response].slice(-30)),
-    );
-  } catch {
-    saved = false;
-  }
-  addWish(response);
-  result.textContent = saved
-    ? `Cảm ơn ${name}! Đã lưu lời hẹn${response.wish ? " và lời chúc" : ""} trên thiết bị này. Đây là bản xem thử, phản hồi chưa được gửi đến cô dâu chú rể.`
-    : `Cảm ơn ${name}! Đã hiển thị lời chúc trong lần xem này. Trình duyệt không cho lưu dữ liệu; phản hồi sẽ mất khi tải lại và chưa được gửi đi.`;
-  result.hidden = false;
-  submitting = true;
-  const submit = $('button[type="submit"]', form);
-  submit.disabled = true;
-  toast(
-    saved
-      ? "Đã lưu lời hẹn thử trên thiết bị của bạn ♡"
-      : "Trình duyệt chưa cho phép lưu lời hẹn.",
+  const saved = writeStorage(
+    "localStorage",
+    "ly-ngoc-rsvp-preview-v1",
+    JSON.stringify(response),
   );
-  window.setTimeout(() => {
-    submitting = false;
-    submit.disabled = false;
-  }, 2000);
+  $("#rsvp-result").hidden = false;
+  $("#rsvp-result").textContent = saved
+    ? `Đã lưu lời nhắn của ${name} trên thiết bị này. Đây là bản xem thử, cô dâu chú rể chưa nhận được phản hồi.`
+    : "Trình duyệt chưa cho phép lưu. Lời nhắn vẫn ở trong ô phía trên, bạn có thể sao chép lại nhé.";
 });
-$("#guest-name").addEventListener("input", () => {
-  $("#guest-name").setCustomValidity("");
-  result.hidden = true;
-});
+try {
+  const draft = JSON.parse(
+    readStorage("localStorage", "ly-ngoc-rsvp-preview-v1") || "null",
+  );
+  if (draft && typeof draft.name === "string") {
+    $("#guest-name").value = draft.name.slice(0, 80);
+    $("#guest-wish").value =
+      typeof draft.wish === "string" ? draft.wish.slice(0, 600) : "";
+    form.elements.attendance.value = draft.attendance === "no" ? "no" : "yes";
+    $("#guest-count").value = String(
+      Math.max(1, Math.min(5, Number(draft.guests) || 1)),
+    );
+    updateAttendance();
+  }
+} catch {
+  /* An unavailable or corrupt draft must never block the invitation. */
+}
