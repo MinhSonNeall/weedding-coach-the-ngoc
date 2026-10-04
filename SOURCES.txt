@@ -45,3 +45,11 @@ Khi đã cấu hình, website hiển thị Form chính thức; Google xác nhậ
 Website đã xuất bản trên GitHub Pages.
 Cá nhân hóa lời mời: thêm ?to=Tên%20khách trên URL.
 Font: Google Fonts — Cormorant Garamond, Be Vietnam Pro, Great Vibes.
+
+CHIA SẺ LINK
+Thông tin Open Graph và Twitter Card được khai báo trực tiếp trong HTML.
+Ảnh chia sẻ: assets/share/wedding-preview-v1.jpg, JPEG 1200 × 630.
+Nguồn bố cục: assets/share/preview-source.html, kết hợp ảnh Edit đang dùng trên thiệp,
+với ảnh hai người trong vườn làm nền cho ảnh chia sẻ,
+monogram từ thiệp gốc và botanical SVG. Không đưa đường dẫn album vào thẻ chia sẻ.
+Tham chiếu Open Graph: https://ogp.me/
