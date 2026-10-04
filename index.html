@@ -68,9 +68,9 @@
       rel="stylesheet"
     />
     <link rel="preload" as="image" href="assets/edited/cover.jpg" />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="rsvp-config.js" defer></script>
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261005-rsvp" />
+    <script src="rsvp-config.js?v=20261005-rsvp" defer></script>
+    <script src="script.js?v=20261005-rsvp" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Đến nội dung chính</a>
@@ -603,79 +603,89 @@
               loading="lazy"
             /><span class="script-signature">Thế Ngọc & Hương Ly</span>
           </div>
-          <div id="google-rsvp" class="google-rsvp reveal" hidden>
-            <iframe
-              id="google-rsvp-frame"
-              title="Xác nhận tham dự cùng Thế Ngọc và Hương Ly"
-              loading="lazy"
-              referrerpolicy="strict-origin-when-cross-origin"
-            ></iframe>
-            <a
-              id="google-rsvp-link"
-              class="text-link"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Mở biểu mẫu ở tab mới ↗</a
-            >
-          </div>
-          <form id="rsvp-form" class="rsvp-form reveal">
-            <p class="eyebrow">LỜI NHẮN DÀNH CHO CHÚNG MÌNH</p>
-            <label for="guest-name">Họ và tên</label
-            ><input
-              id="guest-name"
-              name="name"
-              autocomplete="name"
-              placeholder="Vui lòng nhập họ và tên"
-              maxlength="80"
-              required
-            />
-            <fieldset>
-              <legend>Xác nhận tham dự</legend>
-              <label class="radio-option"
-                ><input
-                  type="radio"
-                  name="attendance"
-                  value="yes"
-                  checked
-                /><span>Sẽ tham dự</span></label
-              ><label class="radio-option"
-                ><input type="radio" name="attendance" value="no" /><span
-                  >Không thể tham dự</span
-                ></label
+          <div class="rsvp-panel">
+            <noscript>
+              <a
+                class="button"
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdn-xTc__UrpdXuC4Jys3-BjoRQkUcQ5l5RUdCRhEzdgghCoQ/viewform"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Mở phiếu xác nhận tham dự ↗</a
               >
-            </fieldset>
-            <div class="guest-count-wrap">
-              <label for="guest-count">Số người tham dự</label
-              ><select id="guest-count" name="guests">
-                <option value="1">01 người</option>
-                <option value="2">02 người</option>
-                <option value="3">03 người</option>
-                <option value="4">04 người</option>
-                <option value="5">05 người</option>
-              </select>
+            </noscript>
+            <form id="rsvp-form" class="rsvp-form reveal" hidden>
+              <p class="eyebrow">LỜI NHẮN DÀNH CHO CHÚNG MÌNH</p>
+              <label for="guest-name">Họ và tên</label
+              ><input
+                id="guest-name"
+                name="name"
+                autocomplete="name"
+                placeholder="Vui lòng nhập họ và tên"
+                maxlength="80"
+                required
+              />
+              <fieldset>
+                <legend>Xác nhận tham dự</legend>
+                <label class="radio-option"
+                  ><input
+                    type="radio"
+                    name="attendance"
+                    value="yes"
+                    checked
+                  /><span>Sẽ tham dự</span></label
+                ><label class="radio-option"
+                  ><input type="radio" name="attendance" value="no" /><span
+                    >Không thể tham dự</span
+                  ></label
+                >
+              </fieldset>
+              <div class="guest-count-wrap">
+                <label for="guest-count">Số người tham dự</label
+                ><select id="guest-count" name="guests">
+                  <option value="1">01 người</option>
+                  <option value="2">02 người</option>
+                  <option value="3">03 người</option>
+                  <option value="4">04 người</option>
+                  <option value="5">05 người</option>
+                </select>
+              </div>
+              <label for="guest-wish">Gửi một chút yêu thương</label
+              ><textarea
+                id="guest-wish"
+                name="wish"
+                rows="3"
+                maxlength="600"
+                placeholder="Lời chúc dành cho cô dâu chú rể…"
+              ></textarea
+              ><button class="button" type="submit">
+                Gửi xác nhận <svg class="icon"><use href="#arrow" /></svg>
+              </button>
+              <p class="form-note">
+                Cảm ơn những tình cảm và lời chúc dành cho Ly & Ngọc.
+              </p>
+              <div
+                id="rsvp-result"
+                class="rsvp-result"
+                role="status"
+                hidden
+              ></div>
+            </form>
+            <div id="google-rsvp" class="google-rsvp reveal" hidden>
+              <iframe
+                id="google-rsvp-frame"
+                name="rsvp-receipt"
+                title="Kết quả xác nhận tham dự từ Google Forms"
+                referrerpolicy="strict-origin-when-cross-origin"
+              ></iframe>
+              <a
+                id="google-rsvp-link"
+                class="text-link"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Mở biểu mẫu nếu cần hỗ trợ ↗</a
+              >
             </div>
-            <label for="guest-wish">Gửi một chút yêu thương</label
-            ><textarea
-              id="guest-wish"
-              name="wish"
-              rows="3"
-              maxlength="600"
-              placeholder="Lời chúc dành cho cô dâu chú rể…"
-            ></textarea
-            ><button class="button" type="submit">
-              Lưu lời nhắn <svg class="icon"><use href="#arrow" /></svg>
-            </button>
-            <p class="form-note">
-              Bản xem thử: lời nhắn chỉ được lưu trên thiết bị này, chưa gửi đến
-              cô dâu chú rể.
-            </p>
-            <div
-              id="rsvp-result"
-              class="rsvp-result"
-              role="status"
-              hidden
-            ></div>
-          </form>
+          </div>
         </div>
       </section>
       <section class="closing">

@@ -39,9 +39,11 @@ CHỨC NĂNG
 HTML/CSS/JS tĩnh. Mở index.html hoặc dùng máy chủ HTTP tĩnh.
 Album có phóng to, phím mũi tên, vuốt trên điện thoại và Esc để đóng.
 Google Maps, sơ đồ lối vào từ mockup, lịch .ics theo giờ Việt Nam.
-RSVP chỉ là bản xem thử lưu trên thiết bị, có thông báo rõ trong form.
-Google Form: chạy google-form/setup.gs rồi cập nhật rsvp-config.js để nhận phản hồi.
-Khi đã cấu hình, website hiển thị Form chính thức; Google xác nhận kết quả gửi.
+RSVP dùng giao diện của thiệp và gửi trực tiếp đến Google Form của chủ nhân.
+rsvp-config.js chứa link khách điền và mã bốn trường của Form.
+Kết quả chính thức từ Google được hiển thị ngay bên dưới form trên website.
+Không coi sự kiện tải iframe là bằng chứng gửi thành công.
+Nếu thiếu cấu hình, nút gửi bị khóa; không hiển thị thành công hoặc lưu nháp thay thế.
 Website đã xuất bản trên GitHub Pages.
 Cá nhân hóa lời mời: thêm ?to=Tên%20khách trên URL.
 Font: Google Fonts — Cormorant Garamond, Be Vietnam Pro, Great Vibes.

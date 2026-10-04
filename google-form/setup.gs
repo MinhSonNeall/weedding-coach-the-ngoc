@@ -131,8 +131,7 @@ function setupWeddingRsvp() {
     console.log('LINK ĐỂ KHÁCH ĐIỀN (gửi link này để gắn vào website):\n' + form.getPublishedUrl());
     console.log('LINK QUẢN LÝ FORM — GIỮ RIÊNG:\n' + form.getEditUrl());
     console.log('BẢNG PHẢN HỒI — GIỮ RIÊNG:\n' + spreadsheet.getUrl());
-    console.log('NỘI DUNG rsvp-config.js:\nwindow.WEDDING_RSVP = Object.freeze({ formUrl: ' +
-      JSON.stringify(form.getPublishedUrl()) + ' });');
+    console.log('KẾT NỐI WEBSITE: gửi LINK ĐỂ KHÁCH ĐIỀN ở trên để cấu hình đường dẫn và mã các trường cho form trên thiệp.');
   } finally {
     lock.releaseLock();
   }

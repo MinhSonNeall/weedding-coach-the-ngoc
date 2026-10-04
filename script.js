@@ -343,33 +343,49 @@ $("#save-date").addEventListener("click", () => {
   toast("Mở tệp lịch vừa tải để lưu ngày hẹn của chúng mình nhé.");
 });
 const form = $("#rsvp-form");
-// Use Google's native confirmation; a cross-origin request alone cannot prove receipt.
-function connectGoogleForm() {
-  const configured = window.WEDDING_RSVP?.formUrl;
-  if (typeof configured !== "string" || !configured.trim()) return;
-  try {
-    const url = new URL(configured);
-    if (
-      url.protocol !== "https:" ||
-      url.hostname !== "docs.google.com" ||
-      url.username ||
-      url.password ||
-      url.port ||
-      !/^\/forms\/d\/(?:e\/)?[A-Za-z0-9_-]+\/viewform\/?$/.test(url.pathname)
+const receipt = $("#google-rsvp");
+const receiptFrame = $("#google-rsvp-frame");
+const sendButton = form.querySelector('button[type="submit"]');
+const rsvpResult = $("#rsvp-result");
+let rsvpTarget = null;
+let sendingRsvp = false;
+let deliveryTimer;
+form.hidden = false;
+
+// Post the styled form through a normal browser navigation. The visible Google
+// response is the receipt; an iframe load alone is never treated as success.
+try {
+  const config = window.WEDDING_RSVP;
+  const url = new URL(config?.formUrl);
+  const entries = config?.entries;
+  if (
+    url.protocol === "https:" &&
+    url.hostname === "docs.google.com" &&
+    !url.username &&
+    !url.password &&
+    !url.port &&
+    /^\/forms\/d\/e\/[A-Za-z0-9_-]+\/viewform\/?$/.test(url.pathname) &&
+    ["name", "attendance", "guests", "wish"].every((key) =>
+      /^entry\.\d+$/.test(entries?.[key]),
     )
-      return;
+  ) {
     url.search = "";
     url.hash = "";
     $("#google-rsvp-link").href = url.href;
+    url.pathname = url.pathname.replace(/viewform\/?$/, "formResponse");
     url.searchParams.set("embedded", "true");
-    $("#google-rsvp-frame").src = url.href;
-    form.hidden = true;
-    $("#google-rsvp").hidden = false;
-  } catch {
-    // Keep the clearly labelled preview when the published URL is missing/invalid.
+    rsvpTarget = { url: url.href, entries };
   }
+} catch {
+  /* An invalid configuration must not send guest details elsewhere. */
 }
-connectGoogleForm();
+if (!rsvpTarget) {
+  sendButton.disabled = true;
+  rsvpResult.hidden = false;
+  rsvpResult.textContent =
+    "Phiếu xác nhận chưa sẵn sàng. Vui lòng thử lại sau.";
+}
+
 function updateAttendance() {
   const coming = form.elements.attendance.value === "yes";
   $(".guest-count-wrap").hidden = !coming;
@@ -381,48 +397,79 @@ $$('input[name="attendance"]').forEach((input) =>
 $("#guest-name").addEventListener("input", () =>
   $("#guest-name").setCustomValidity(""),
 );
+
+function finishDeliveryView() {
+  if (!sendingRsvp) return;
+  clearTimeout(deliveryTimer);
+  sendingRsvp = false;
+  receipt.removeAttribute("aria-busy");
+  rsvpResult.textContent = "Vui lòng xem kết quả gửi ở khung bên dưới.";
+  receipt.classList.add("is-visible");
+  receipt.scrollIntoView({
+    behavior: motion.matches ? "instant" : "smooth",
+    block: "center",
+  });
+  // Require a deliberate edit before allowing another submission.
+}
+receiptFrame.addEventListener("load", finishDeliveryView);
+form.addEventListener("input", () => {
+  if (rsvpTarget && !sendingRsvp) sendButton.disabled = false;
+});
 form.addEventListener("submit", (event) => {
   event.preventDefault();
+  if (!rsvpTarget || sendingRsvp) return;
   const name = $("#guest-name").value.trim();
   if (!name) {
     $("#guest-name").setCustomValidity("Vui lòng nhập họ và tên.");
     $("#guest-name").reportValidity();
     return;
   }
-  const response = {
-    name,
-    attendance: form.elements.attendance.value,
-    guests:
-      form.elements.attendance.value === "yes"
-        ? Number($("#guest-count").value)
-        : 0,
-    wish: $("#guest-wish").value.trim(),
-    updatedAt: new Date().toISOString(),
-  };
-  const saved = writeStorage(
-    "localStorage",
-    "ly-ngoc-rsvp-preview-v1",
-    JSON.stringify(response),
-  );
-  $("#rsvp-result").hidden = false;
-  $("#rsvp-result").textContent = saved
-    ? `Đã lưu lời nhắn của ${name} trên thiết bị này. Đây là bản xem thử, cô dâu chú rể chưa nhận được phản hồi.`
-    : "Trình duyệt chưa cho phép lưu. Lời nhắn vẫn ở trong ô phía trên, vui lòng sao chép để giữ lại.";
-});
-try {
-  const draft = JSON.parse(
-    readStorage("localStorage", "ly-ngoc-rsvp-preview-v1") || "null",
-  );
-  if (draft && typeof draft.name === "string") {
-    $("#guest-name").value = draft.name.slice(0, 80);
-    $("#guest-wish").value =
-      typeof draft.wish === "string" ? draft.wish.slice(0, 600) : "";
-    form.elements.attendance.value = draft.attendance === "no" ? "no" : "yes";
-    $("#guest-count").value = String(
-      Math.max(1, Math.min(5, Number(draft.guests) || 1)),
-    );
-    updateAttendance();
+  if (!navigator.onLine) {
+    rsvpResult.hidden = false;
+    rsvpResult.textContent =
+      "Chưa có kết nối mạng. Thông tin vẫn được giữ trong form; vui lòng thử lại khi có mạng.";
+    return;
   }
-} catch {
-  /* An unavailable or corrupt draft must never block the invitation. */
-}
+  const coming = form.elements.attendance.value === "yes";
+  const payload = {
+    [rsvpTarget.entries.name]: name,
+    [rsvpTarget.entries.attendance]: coming
+      ? "Sẽ tham dự"
+      : "Không thể tham dự",
+    [rsvpTarget.entries.wish]: $("#guest-wish").value.trim(),
+    fvv: "1",
+    pageHistory: coming ? "0,1,2" : "0,2",
+  };
+  if (coming) payload[rsvpTarget.entries.guests] = $("#guest-count").value;
+  const deliveryForm = document.createElement("form");
+  deliveryForm.method = "POST";
+  deliveryForm.action = rsvpTarget.url;
+  deliveryForm.target = receiptFrame.name;
+  deliveryForm.acceptCharset = "UTF-8";
+  deliveryForm.hidden = true;
+  for (const [key, value] of Object.entries(payload)) {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = key;
+    input.value = value;
+    deliveryForm.append(input);
+  }
+  document.body.append(deliveryForm);
+  sendingRsvp = true;
+  sendButton.disabled = true;
+  receipt.hidden = false;
+  receipt.classList.add("is-visible");
+  receipt.setAttribute("aria-busy", "true");
+  rsvpResult.hidden = false;
+  rsvpResult.textContent = "Đang gửi xác nhận…";
+  deliveryTimer = setTimeout(() => {
+    sendingRsvp = false;
+    receipt.removeAttribute("aria-busy");
+    sendButton.disabled = false;
+    rsvpResult.textContent =
+      "Chưa hiển thị được kết quả. Vui lòng kiểm tra khung bên dưới trước khi gửi lại.";
+  }, 30000);
+  HTMLFormElement.prototype.submit.call(deliveryForm);
+  deliveryForm.remove();
+});
+updateAttendance();

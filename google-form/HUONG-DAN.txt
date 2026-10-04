@@ -9,8 +9,8 @@ TẠO GOOGLE FORM CHO THIỆP CƯỚI LY & NGỌC
    Chạy lại trong CÙNG dự án sẽ trả về các liên kết cũ, không tạo thêm Form.
 
 3. Mở Nhật ký thực thi (Execution log). Sao chép LINK ĐỂ KHÁCH ĐIỀN
-   gửi lại trong cuộc trò chuyện để gắn vào thiệp. Hoặc dán nội dung cấu hình
-   được in trong nhật ký vào rsvp-config.js, rồi đẩy thay đổi lên GitHub.
+   gửi lại trong cuộc trò chuyện để gắn vào thiệp. Website cần cấu hình đúng
+   cả đường dẫn Form và mã của các trường để gửi từ giao diện thiệp.
    Chỉ sử dụng link kết thúc bằng /viewform. Không đưa link quản lý Form hoặc
    bảng phản hồi vào website/kho GitHub.
 
@@ -29,10 +29,12 @@ Trước khi gửi thiệp cho khách:
   Xóa phản hồi thử ở cả Form và Sheet sau khi kiểm tra.
 - Có thể chọn màu xanh navy và ảnh bìa trong giao diện chỉnh sửa Google Form.
 
-Website sẽ nhúng Form Google ngay trong phần xác nhận khi có formUrl hợp lệ.
-Google hiển thị xác nhận sau khi nhận thành công; website không giả lập gửi.
-Hiện tại formUrl còn trống: mục lời nhắn vẫn là bản xem thử lưu trên thiết bị.
-Mã đã được chuẩn bị, chưa được chạy trong tài khoản Google của bạn.
+Khách điền họ tên, tham dự, số người và lời chúc bằng form trong giao diện thiệp.
+Nút Gửi xác nhận gửi trực tiếp đến Google Form; kết quả chính thức từ Google
+hiển thị ngay bên dưới trên cùng trang. Không cần mở tab khác để gửi.
+Form đã được chủ nhân tạo và gửi link khách điền; rsvp-config.js đã cấu hình
+để website dùng Form thật. Không cần chạy mã tạo mới để sử dụng thiệp hiện tại.
+Nếu đổi Form hoặc xóa/tạo lại câu hỏi, gửi lại link để cập nhật kết nối.
 
 NẾU ĐÃ CHẠY BẢN CŨ VÀ GẶP “The form currently has no response destination”
 Thay toàn bộ Code.gs bằng setup.gs mới trong CHÍNH dự án đang mở, lưu rồi
