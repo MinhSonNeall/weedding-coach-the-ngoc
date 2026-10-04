@@ -1092,6 +1092,23 @@ h1 .name-and {
   outline-offset: -9px;
   box-shadow: 0 10px 30px #1934480a;
 }
+.google-rsvp {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #fffef8;
+}
+.google-rsvp iframe {
+  display: block;
+  width: 100%;
+  height: 1050px;
+  border: 0;
+}
+.google-rsvp > .text-link {
+  display: block;
+  margin: 0 24px 24px;
+  text-align: center;
+}
 .rsvp-form > .eyebrow {
   margin-bottom: 23px;
   font-size: 9px;
@@ -2700,4 +2717,25 @@ dialog::backdrop {
     opacity: 1;
     transform: none;
   }
+}
+
+.hero-photo img,
+.little-photo img,
+.gallery-item img {
+  filter: none;
+}
+
+.dresscode-copy .dresscode-note {
+  margin-top: 24px;
+  padding: 19px 22px;
+  border: 1px solid #c3cbbb;
+  border-left: 4px solid var(--olive);
+  background: #eeeee2;
+  color: var(--navy);
+  font-size: clamp(17px, 1.5vw, 21px);
+  font-style: normal;
+  line-height: 1.7;
+}
+.dresscode-note strong {
+  font-weight: 600;
 }

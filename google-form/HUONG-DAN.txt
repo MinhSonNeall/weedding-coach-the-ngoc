@@ -1,0 +1,35 @@
+TẠO GOOGLE FORM CHO THIỆP CƯỚI LY & NGỌC
+
+1. Mở https://script.google.com/home/start bằng tài khoản Google của bạn.
+   Tạo dự án mới, xóa nội dung mẫu trong Code.gs và dán toàn bộ setup.gs.
+
+2. Lưu dự án. Chọn hàm setupWeddingRsvp rồi bấm Chạy (Run).
+   Google sẽ yêu cầu quyền tạo/quản lý Form và bảng tính trong tài khoản này.
+   Đây là mã bạn vừa tự thêm vào tài khoản; bạn có thể đọc toàn bộ trước khi chạy.
+   Chạy lại trong CÙNG dự án sẽ trả về các liên kết cũ, không tạo thêm Form.
+
+3. Mở Nhật ký thực thi (Execution log). Sao chép LINK ĐỂ KHÁCH ĐIỀN
+   gửi lại trong cuộc trò chuyện để gắn vào thiệp. Hoặc dán nội dung cấu hình
+   được in trong nhật ký vào rsvp-config.js, rồi đẩy thay đổi lên GitHub.
+   Chỉ sử dụng link kết thúc bằng /viewform. Không đưa link quản lý Form hoặc
+   bảng phản hồi vào website/kho GitHub.
+
+Mã tạo sẵn:
+- Form hỏi tên, có tham dự không, số người, lời chúc.
+- Khách không tham dự sẽ được bỏ qua phần số người.
+- Bảng tính nhận phản hồi tự động và tab Tổng hợp số khách.
+- Không thu email, không yêu cầu giới hạn một câu trả lời/tài khoản.
+- Không chia sẻ công khai bảng phản hồi hoặc bản tóm tắt kết quả.
+
+Trước khi gửi thiệp cho khách:
+- Mở link khách điền bằng cửa sổ ẩn danh. Nếu tài khoản cơ quan giới hạn
+  người trả lời, vào quyền truy cập người trả lời của Form và cho phép
+  bất kỳ ai có liên kết. Giới hạn của quản trị viên Google có thể vẫn áp dụng.
+- Gửi một phản hồi thử rồi kiểm tra tab câu trả lời và Tổng hợp trong Sheet.
+  Xóa phản hồi thử ở cả Form và Sheet sau khi kiểm tra.
+- Có thể chọn màu xanh navy và ảnh bìa trong giao diện chỉnh sửa Google Form.
+
+Website sẽ nhúng Form Google ngay trong phần xác nhận khi có formUrl hợp lệ.
+Google hiển thị xác nhận sau khi nhận thành công; website không giả lập gửi.
+Hiện tại formUrl còn trống: mục lời nhắn vẫn là bản xem thử lưu trên thiết bị.
+Mã đã được chuẩn bị, chưa được chạy trong tài khoản Google của bạn.

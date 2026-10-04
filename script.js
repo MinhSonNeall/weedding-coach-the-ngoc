@@ -52,7 +52,7 @@ function musicState(playing, blocked = false) {
   $("#music-status").textContent = audioFailed
     ? "Nhạc chưa tải được · chạm để thử lại"
     : blocked
-      ? "Nhạc sẽ vang lên khi bạn chạm vào thiệp"
+      ? "Chạm vào thiệp để nhạc vang lên"
       : playing
         ? "14 Casper · Bon Nghiêm · buitruonglinh"
         : "Đã tạm dừng · chạm để nghe tiếp";
@@ -117,7 +117,7 @@ function unlockMusic(event) {
     return;
   startMusic();
 }
-["pointerdown", "touchend", "keydown"].forEach((event) =>
+["pointerdown", "pointerup", "touchend", "click", "keydown"].forEach((event) =>
   document.addEventListener(event, unlockMusic, { passive: true }),
 );
 document.addEventListener("visibilitychange", () => {
@@ -343,6 +343,33 @@ $("#save-date").addEventListener("click", () => {
   toast("Mở tệp lịch vừa tải để lưu ngày hẹn của chúng mình nhé.");
 });
 const form = $("#rsvp-form");
+// Use Google's native confirmation; a cross-origin request alone cannot prove receipt.
+function connectGoogleForm() {
+  const configured = window.WEDDING_RSVP?.formUrl;
+  if (typeof configured !== "string" || !configured.trim()) return;
+  try {
+    const url = new URL(configured);
+    if (
+      url.protocol !== "https:" ||
+      url.hostname !== "docs.google.com" ||
+      url.username ||
+      url.password ||
+      url.port ||
+      !/^\/forms\/d\/(?:e\/)?[A-Za-z0-9_-]+\/viewform\/?$/.test(url.pathname)
+    )
+      return;
+    url.search = "";
+    url.hash = "";
+    $("#google-rsvp-link").href = url.href;
+    url.searchParams.set("embedded", "true");
+    $("#google-rsvp-frame").src = url.href;
+    form.hidden = true;
+    $("#google-rsvp").hidden = false;
+  } catch {
+    // Keep the clearly labelled preview when the published URL is missing/invalid.
+  }
+}
+connectGoogleForm();
 function updateAttendance() {
   const coming = form.elements.attendance.value === "yes";
   $(".guest-count-wrap").hidden = !coming;
@@ -358,7 +385,7 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
   const name = $("#guest-name").value.trim();
   if (!name) {
-    $("#guest-name").setCustomValidity("Bạn nhập tên giúp chúng mình nhé.");
+    $("#guest-name").setCustomValidity("Vui lòng nhập họ và tên.");
     $("#guest-name").reportValidity();
     return;
   }
@@ -380,7 +407,7 @@ form.addEventListener("submit", (event) => {
   $("#rsvp-result").hidden = false;
   $("#rsvp-result").textContent = saved
     ? `Đã lưu lời nhắn của ${name} trên thiết bị này. Đây là bản xem thử, cô dâu chú rể chưa nhận được phản hồi.`
-    : "Trình duyệt chưa cho phép lưu. Lời nhắn vẫn ở trong ô phía trên, bạn có thể sao chép lại nhé.";
+    : "Trình duyệt chưa cho phép lưu. Lời nhắn vẫn ở trong ô phía trên, vui lòng sao chép để giữ lại.";
 });
 try {
   const draft = JSON.parse(
