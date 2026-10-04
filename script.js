@@ -1,17 +1,14 @@
 "use strict";
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+const t = (key) => window.WEDDING_I18N.t(key);
 const WEDDING = {
   date: "2026-11-07T17:15:00+07:00",
-  title: "Lễ cưới Thế Ngọc & Hương Ly",
-  location:
-    "Khu bể bơi Serenity, tầng 1, Khách sạn Hà Nội Daewoo, 360 Kim Mã, Giảng Võ, Hà Nội",
-  description:
-    "15h: Lễ thân mật cùng gia đình. 17h15–17h30: Đón khách tiệc cưới. 18h: Nghi lễ đính hôn. 19h: Cô dâu chú rể khiêu vũ. 19h30: Giao lưu và tung hoa.",
 };
 let toastTimer;
-function toast(message) {
-  $("#toast").textContent = message;
+function toast(messageKey) {
+  $("#toast").dataset.i18n = messageKey;
+  $("#toast").textContent = t(messageKey);
   $("#toast").classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => $("#toast").classList.remove("show"), 5000);
@@ -40,22 +37,24 @@ const positionKey = "ly-ngoc-mot-doi-position-v1";
 let musicEnabled = readStorage("localStorage", musicKey) !== "false";
 let starting = false;
 let audioFailed = false;
+let musicBlocked = false;
 audio.volume = 0.4;
 audio.autoplay = musicEnabled;
 function musicState(playing, blocked = false) {
+  musicBlocked = blocked;
   musicButton.classList.toggle("is-playing", playing);
   musicButton.setAttribute("aria-pressed", String(playing));
   musicButton.setAttribute(
     "aria-label",
-    playing ? "Tạm dừng nhạc một đời" : "Bật nhạc một đời",
+    playing ? t("music.pause") : t("music.play"),
   );
   $("#music-status").textContent = audioFailed
-    ? "Nhạc chưa tải được · chạm để thử lại"
+    ? t("music.error")
     : blocked
-      ? "Chạm vào thiệp để nhạc vang lên"
+      ? t("music.blocked")
       : playing
         ? "14 Casper · Bon Nghiêm · buitruonglinh"
-        : "Đã tạm dừng · chạm để nghe tiếp";
+        : t("music.paused");
 }
 async function startMusic() {
   if (!musicEnabled || starting || !audio.paused) return;
@@ -129,13 +128,13 @@ else musicState(false);
 const menu = $(".menu-toggle");
 function closeMenu() {
   menu.setAttribute("aria-expanded", "false");
-  menu.setAttribute("aria-label", "Mở menu");
+  menu.setAttribute("aria-label", t("menu.open"));
   $("#mobile-nav").hidden = true;
 }
 menu.addEventListener("click", () => {
   const open = menu.getAttribute("aria-expanded") !== "true";
   menu.setAttribute("aria-expanded", String(open));
-  menu.setAttribute("aria-label", open ? "Đóng menu" : "Mở menu");
+  menu.setAttribute("aria-label", open ? t("menu.close") : t("menu.open"));
   $("#mobile-nav").hidden = !open;
 });
 $$("#mobile-nav a").forEach((a) => a.addEventListener("click", closeMenu));
@@ -191,15 +190,18 @@ function countdown() {
       ($(`#${key}`).textContent = String(value).padStart(2, "0")),
   );
   if (!remaining) {
-    $("#countdown-title").textContent = "Ngày chung đôi đã đến.";
+    $("#countdown-title").dataset.i18n = "countdown.arrived";
+    $("#countdown-title").textContent = t("countdown.arrived");
     clearInterval(countdownInterval);
   }
 }
 countdownInterval = setInterval(countdown, 1000);
 countdown();
 const guest = new URLSearchParams(location.search).get("to");
-if (guest && guest.trim())
+if (guest && guest.trim()) {
+  $("#guest-dedication").dataset.personalized = "true";
   $("#guest-dedication").textContent = guest.trim().slice(0, 100);
+}
 
 function openDialog(dialog) {
   dialog.showModal();
@@ -311,19 +313,19 @@ $("#save-date").addEventListener("click", () => {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//LyNgoc//Wedding//VI",
+    `PRODID:-//LyNgoc//Wedding//${window.WEDDING_I18N.language.toUpperCase()}`,
     "CALSCALE:GREGORIAN",
     "BEGIN:VEVENT",
     "UID:ly-ngoc-20261107@wedding.local",
     `DTSTAMP:${icsDate(Date.now())}`,
     `DTSTART:${icsDate(WEDDING.date)}`,
-    `SUMMARY:${icsText(WEDDING.title)}`,
-    `LOCATION:${icsText(WEDDING.location)}`,
-    `DESCRIPTION:${icsText(WEDDING.description)}`,
+    `SUMMARY:${icsText(t("calendar.title"))}`,
+    `LOCATION:${icsText(t("calendar.location"))}`,
+    `DESCRIPTION:${icsText(t("calendar.description"))}`,
     "BEGIN:VALARM",
     "TRIGGER:-P1D",
     "ACTION:DISPLAY",
-    "DESCRIPTION:Ngày mai hẹn gặp Ly và Ngọc!",
+    `DESCRIPTION:${icsText(t("calendar.reminder"))}`,
     "END:VALARM",
     "END:VEVENT",
     "END:VCALENDAR",
@@ -340,7 +342,7 @@ $("#save-date").addEventListener("click", () => {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 10000);
-  toast("Mở tệp lịch vừa tải để lưu ngày hẹn của chúng mình nhé.");
+  toast("calendar.saved");
 });
 const form = $("#rsvp-form");
 const receipt = $("#google-rsvp");
@@ -350,6 +352,10 @@ const rsvpResult = $("#rsvp-result");
 let rsvpTarget = null;
 let sendingRsvp = false;
 let deliveryTimer;
+function setRsvpStatus(key) {
+  rsvpResult.dataset.i18n = key;
+  rsvpResult.textContent = t(key);
+}
 form.hidden = false;
 
 // Post the styled form through a normal browser navigation. The visible Google
@@ -382,8 +388,7 @@ try {
 if (!rsvpTarget) {
   sendButton.disabled = true;
   rsvpResult.hidden = false;
-  rsvpResult.textContent =
-    "Phiếu xác nhận chưa sẵn sàng. Vui lòng thử lại sau.";
+  setRsvpStatus("rsvp.unavailable");
 }
 
 function updateAttendance() {
@@ -397,13 +402,17 @@ $$('input[name="attendance"]').forEach((input) =>
 $("#guest-name").addEventListener("input", () =>
   $("#guest-name").setCustomValidity(""),
 );
+$("#guest-name").addEventListener("invalid", (event) => {
+  if (!event.target.value.trim())
+    event.target.setCustomValidity(t("rsvp.requiredName"));
+});
 
 function finishDeliveryView() {
   if (!sendingRsvp) return;
   clearTimeout(deliveryTimer);
   sendingRsvp = false;
   receipt.removeAttribute("aria-busy");
-  rsvpResult.textContent = "Vui lòng xem kết quả gửi ở khung bên dưới.";
+  setRsvpStatus("rsvp.result");
   receipt.classList.add("is-visible");
   receipt.scrollIntoView({
     behavior: motion.matches ? "instant" : "smooth",
@@ -420,14 +429,13 @@ form.addEventListener("submit", (event) => {
   if (!rsvpTarget || sendingRsvp) return;
   const name = $("#guest-name").value.trim();
   if (!name) {
-    $("#guest-name").setCustomValidity("Vui lòng nhập họ và tên.");
+    $("#guest-name").setCustomValidity(t("rsvp.requiredName"));
     $("#guest-name").reportValidity();
     return;
   }
   if (!navigator.onLine) {
     rsvpResult.hidden = false;
-    rsvpResult.textContent =
-      "Chưa có kết nối mạng. Thông tin vẫn được giữ trong form; vui lòng thử lại khi có mạng.";
+    setRsvpStatus("rsvp.offline");
     return;
   }
   const coming = form.elements.attendance.value === "yes";
@@ -443,7 +451,9 @@ form.addEventListener("submit", (event) => {
   if (coming) payload[rsvpTarget.entries.guests] = $("#guest-count").value;
   const deliveryForm = document.createElement("form");
   deliveryForm.method = "POST";
-  deliveryForm.action = rsvpTarget.url;
+  const postUrl = new URL(rsvpTarget.url);
+  postUrl.searchParams.set("hl", window.WEDDING_I18N.language);
+  deliveryForm.action = postUrl.href;
   deliveryForm.target = receiptFrame.name;
   deliveryForm.acceptCharset = "UTF-8";
   deliveryForm.hidden = true;
@@ -461,15 +471,36 @@ form.addEventListener("submit", (event) => {
   receipt.classList.add("is-visible");
   receipt.setAttribute("aria-busy", "true");
   rsvpResult.hidden = false;
-  rsvpResult.textContent = "Đang gửi xác nhận…";
+  setRsvpStatus("rsvp.sending");
   deliveryTimer = setTimeout(() => {
     sendingRsvp = false;
     receipt.removeAttribute("aria-busy");
     sendButton.disabled = false;
-    rsvpResult.textContent =
-      "Chưa hiển thị được kết quả. Vui lòng kiểm tra khung bên dưới trước khi gửi lại.";
+    setRsvpStatus("rsvp.timeout");
   }, 30000);
   HTMLFormElement.prototype.submit.call(deliveryForm);
   deliveryForm.remove();
 });
 updateAttendance();
+
+function refreshLocalizedState() {
+  musicState(!audio.paused, musicBlocked);
+  menu.setAttribute(
+    "aria-label",
+    t(
+      menu.getAttribute("aria-expanded") === "true"
+        ? "menu.close"
+        : "menu.open",
+    ),
+  );
+  if (lightbox.open) showPhoto(photoIndex);
+  if ($("#guest-name").validity.customError)
+    $("#guest-name").setCustomValidity(t("rsvp.requiredName"));
+  if (rsvpTarget) {
+    const helpUrl = new URL(window.WEDDING_RSVP.formUrl);
+    helpUrl.searchParams.set("hl", window.WEDDING_I18N.language);
+    $("#google-rsvp-link").href = helpUrl.href;
+  }
+}
+document.addEventListener("wedding:languagechange", refreshLocalizedState);
+refreshLocalizedState();

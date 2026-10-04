@@ -64,10 +64,10 @@
         width: 67px;
         height: 66px;
         object-fit: contain;
-        margin: 0 auto 24px;
+        margin: 0 auto 16px;
       }
       .eyebrow {
-        margin: 0 0 17px;
+        margin: 0 0 4px;
         font:
           400 14px/1.5 "Be Vietnam Pro",
           sans-serif;
@@ -92,7 +92,7 @@
         font-weight: 400;
       }
       .date {
-        margin: 26px 0 11px;
+        margin: 19px 0 2px;
         font:
           500 39px/1.2 "Cormorant Garamond",
           Georgia,
@@ -112,6 +112,21 @@
           sans-serif;
         margin: 7px 0 0;
         color: #677455;
+      }
+      .english {
+        margin: 0 0 14px;
+        font:
+          400 12px/1.5 "Be Vietnam Pro",
+          sans-serif;
+        letter-spacing: 1.5px;
+        color: #677455;
+      }
+      .date + .english {
+        margin-bottom: 10px;
+      }
+      .time + .english {
+        margin: 3px 0 0;
+        letter-spacing: 0;
       }
       .flower {
         position: absolute;
@@ -136,10 +151,15 @@
       <div class="copy">
         <img class="monogram" src="../stationery/monogram.png" alt="LN" />
         <p class="eyebrow">TRÂN TRỌNG KÍNH MỜI</p>
+        <p class="english" lang="en">YOU ARE WARMLY INVITED</p>
         <h1>Thế Ngọc<span>&</span><em>Hương Ly</em></h1>
         <p class="date">07 · 11 · 2026</p>
+        <p class="english" lang="en">SATURDAY, 7 NOVEMBER 2026</p>
         <p class="venue">HÀ NỘI DAEWOO HOTEL</p>
         <p class="time">Đón khách 17h15 · Khu bể bơi Serenity</p>
+        <p class="english" lang="en">
+          Arrival from 5:15 PM · Serenity outdoor pool
+        </p>
       </div>
       <img class="flower" src="../blue-botanical.svg" alt="" />
     </main>

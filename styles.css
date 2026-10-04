@@ -242,6 +242,29 @@ h2 em {
 .nav-cta:hover {
   background: var(--cream);
 }
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  padding: 3px;
+  border: 1px solid #a7b3a5;
+  color: var(--muted);
+}
+.language-switch button {
+  min-width: 31px;
+  min-height: 31px;
+  padding: 4px;
+  font-size: 10px;
+  font-weight: 500;
+}
+.language-switch button[aria-pressed="true"] {
+  color: var(--paper);
+  background: var(--navy);
+}
+.language-switch > span {
+  font-size: 10px;
+}
 .menu-toggle {
   display: none;
 }
@@ -2746,4 +2769,79 @@ dialog::backdrop {
 }
 .dresscode-note strong {
   font-weight: 600;
+}
+
+.inline-icon {
+  display: inline-block;
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: -0.15em;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.little-star .inline-icon {
+  width: 1em;
+  height: 1em;
+}
+.icon-flip {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 600px) {
+  .invitation-card h3 {
+    font-size: clamp(24px, 7.2vw, 34px);
+  }
+  .timeline-heading > img {
+    right: 22px;
+  }
+  html[lang="en"] .timeline time > small {
+    font-size: 14px;
+  }
+  .venue-art {
+    max-width: min(400px, calc(100% - 24px));
+    margin-inline: auto;
+  }
+}
+
+.nav-wrap {
+  gap: 20px;
+}
+html[lang="en"] .timeline time > span {
+  margin-left: 3px;
+  font-family: var(--sans);
+  font-size: 10px;
+  font-style: normal;
+}
+@media (max-width: 800px) {
+  .site-header .nav-wrap {
+    gap: 12px;
+  }
+  .nav-cta {
+    margin-right: 0;
+  }
+  .menu-toggle {
+    flex-shrink: 0;
+  }
+}
+@media (max-width: 480px) {
+  .site-header .nav-wrap {
+    width: calc(100% - 32px);
+    gap: 10px;
+  }
+  .brand > span {
+    display: none;
+  }
+  .nav-cta {
+    gap: 8px;
+    padding: 8px 10px;
+    font-size: 8px;
+  }
+  .language-switch button {
+    min-width: 28px;
+    min-height: 30px;
+  }
 }

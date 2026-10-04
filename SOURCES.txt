@@ -50,8 +50,20 @@ Font: Google Fonts — Cormorant Garamond, Be Vietnam Pro, Great Vibes.
 
 CHIA SẺ LINK
 Thông tin Open Graph và Twitter Card được khai báo trực tiếp trong HTML.
-Ảnh chia sẻ: assets/share/wedding-preview-v1.jpg, JPEG 1200 × 630.
+Ảnh chia sẻ: assets/share/wedding-preview-v2.jpg, JPEG 1200 × 630.
 Nguồn bố cục: assets/share/preview-source.html, kết hợp ảnh Edit đang dùng trên thiệp,
 với ảnh hai người trong vườn làm nền cho ảnh chia sẻ,
 monogram từ thiệp gốc và botanical SVG. Không đưa đường dẫn album vào thẻ chia sẻ.
 Tham chiếu Open Graph: https://ogp.me/
+
+SONG NGỮ
+Nút VI / EN chuyển toàn bộ lời mời, timeline, RSVP, chú thích ảnh và lịch tải về.
+Mặc định tiếng Việt; nhớ lựa chọn trên trình duyệt. Link ?lang=en mở tiếng Anh,
+?lang=vi mở tiếng Việt; có thể kết hợp &to=Tên%20khách để cá nhân hóa.
+Chuyển ngôn ngữ giữ thông tin đang điền và trạng thái nhạc. Không thay đổi PDF gốc.
+Ảnh chia sẻ dùng cả hai ngôn ngữ, giữ ảnh đôi trong vườn làm nền.
+Giá trị gửi tới Google Form giữ nguyên lựa chọn tiếng Việt để khớp cấu hình
+và công thức tổng hợp. Giao diện nhập trên website có đầy đủ VI / EN.
+Thông báo xác nhận do chủ Form đặt trên Google vẫn là tiếng Việt; website
+tiếng Anh có giải nghĩa thông báo này, không tự xác nhận gửi thành công.
+Icon hoa và mũi tên dùng SVG cùng màu thiết kế để tránh iOS/Messenger tự hiện emoji.
