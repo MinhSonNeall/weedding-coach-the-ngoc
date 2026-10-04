@@ -89,7 +89,16 @@ function setupWeddingRsvp() {
       spreadsheet.setSpreadsheetTimeZone('Asia/Ho_Chi_Minh');
       // Google may insert the response tab at index 0: never write by tab position.
       var summary = spreadsheet.getSheetByName('Tổng hợp') || spreadsheet.insertSheet('Tổng hợp');
-      if (form.getDestinationId() !== spreadsheet.getId()) {
+      // A new Form throws here until its first response destination is linked.
+      var destinationId = null;
+      try {
+        destinationId = form.getDestinationId();
+      } catch (error) {
+        // Only this expected first-run state is safe to recover from.
+        // Permission or service failures must not silently replace a destination.
+        if (!/no response destination/i.test(String(error))) throw error;
+      }
+      if (destinationId !== spreadsheet.getId()) {
         form.setDestination(FormApp.DestinationType.SPREADSHEET, spreadsheet.getId());
       }
       SpreadsheetApp.flush();

@@ -33,3 +33,9 @@ Website sẽ nhúng Form Google ngay trong phần xác nhận khi có formUrl h�
 Google hiển thị xác nhận sau khi nhận thành công; website không giả lập gửi.
 Hiện tại formUrl còn trống: mục lời nhắn vẫn là bản xem thử lưu trên thiết bị.
 Mã đã được chuẩn bị, chưa được chạy trong tài khoản Google của bạn.
+
+NẾU ĐÃ CHẠY BẢN CŨ VÀ GẶP “The form currently has no response destination”
+Thay toàn bộ Code.gs bằng setup.gs mới trong CHÍNH dự án đang mở, lưu rồi
+chạy lại setupWeddingRsvp. Không tạo dự án mới hoặc xóa Script Properties:
+mã sẽ dùng tiếp Form và Sheet đã tạo, không thêm bản trùng.
+Không cần bấm Deploy. Chạy xong, lấy LINK ĐỂ KHÁCH ĐIỀN trong Execution log.
