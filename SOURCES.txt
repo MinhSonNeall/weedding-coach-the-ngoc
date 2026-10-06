@@ -40,14 +40,12 @@ HTML/CSS/JS tĩnh. Mở index.html hoặc dùng máy chủ HTTP tĩnh.
 Album có phóng to, phím mũi tên, vuốt trên điện thoại và Esc để đóng.
 Google Maps, sơ đồ lối vào từ mockup, lịch .ics theo giờ Việt Nam.
 RSVP dùng giao diện của thiệp và gửi trực tiếp đến Google Form của chủ nhân.
-rsvp-config.js chứa link khách điền và mã bốn trường của Form.
+rsvp-config.js chứa link khách điền và mã năm trường của Form.
 Form trên thiệp bắt buộc chọn “Bạn là: Khách nhà gái / Khách nhà trai”.
-Google Form hiện tại chưa có trường riêng cho lựa chọn này; website lưu dòng
-“Bạn là: Khách nhà gái” hoặc “Bạn là: Khách nhà trai” ở đầu cột lời nhắn,
-tiếp theo là lời chúc (nếu có). Giá trị lưu luôn bằng tiếng Việt ở cả VI / EN.
-Khi Form có câu hỏi “Bạn là” riêng, thêm mã entry thật vào entries.side
-trong rsvp-config.js. Website sẽ gửi lựa chọn vào trường đó, chỉ gửi lời chúc
-vào trường lời nhắn. Không tự đoán mã entry hoặc thêm link quản lý vào repo.
+Google Form đã có câu hỏi “Bạn là” riêng, mã entry.1880755401.
+Website gửi lựa chọn vào trường này để lưu ở cột riêng trong Sheet;
+trường lời nhắn chỉ chứa lời chúc. Giá trị lựa chọn luôn bằng tiếng Việt ở VI / EN.
+Không tự đoán mã entry hoặc thêm link quản lý vào repo.
 Kết quả chính thức từ Google được hiển thị ngay bên dưới form trên website.
 Không coi sự kiện tải iframe là bằng chứng gửi thành công.
 Nếu thiếu cấu hình, nút gửi bị khóa; không hiển thị thành công hoặc lưu nháp thay thế.

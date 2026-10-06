@@ -5,6 +5,7 @@ window.WEDDING_RSVP = Object.freeze({
     "https://docs.google.com/forms/d/e/1FAIpQLSdn-xTc__UrpdXuC4Jys3-BjoRQkUcQ5l5RUdCRhEzdgghCoQ/viewform",
   entries: Object.freeze({
     name: "entry.2115103812",
+    side: "entry.1880755401",
     attendance: "entry.1863422340",
     guests: "entry.747947620",
     wish: "entry.544044614",
