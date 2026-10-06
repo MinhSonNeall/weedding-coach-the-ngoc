@@ -27,8 +27,9 @@ const translations = {
     "family.groomNames": "Ông Nguyễn Thành Đô<br>Bà Nguyễn Diệu Hương Ly",
     "family.brideNames": "Ông Nguyễn Mạnh Hùng<br>Bà Nguyễn Thu Hương",
     "invitation.label": "TRÂN TRỌNG KÍNH MỜI",
-    "invitation.guest": "Những người thân yêu",
-    "invitation.note": "Đến chung vui trong ngày cưới của",
+    "invitation.guest": "Khách quý",
+    "invitation.note":
+      "Đến chung vui cùng hai gia đình chúng tôi trong ngày cưới của",
     "invitation.date": "07.11.2026",
     "invitation.arrival": "ĐÓN KHÁCH TỪ 17H15",
     "invitation.lunar": "Ngày 29 tháng 09 năm Bính Ngọ",
@@ -97,6 +98,9 @@ const translations = {
       'Mở phiếu xác nhận tham dự <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
     "rsvp.eyebrow": "LỜI NHẮN DÀNH CHO CHÚNG MÌNH",
     "rsvp.name": "Họ và tên",
+    "rsvp.side": "Bạn là:",
+    "rsvp.brideGuest": "Khách nhà gái",
+    "rsvp.groomGuest": "Khách nhà trai",
     "rsvp.attendance": "Xác nhận tham dự",
     "rsvp.yes": "Sẽ tham dự",
     "rsvp.no": "Không thể tham dự",
@@ -112,7 +116,8 @@ const translations = {
     "rsvp.thanks": "Cảm ơn những tình cảm và lời chúc dành cho Ly &amp; Ngọc.",
     "rsvp.support":
       'Mở biểu mẫu nếu cần hỗ trợ <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
-    "footer.message": "Trân trọng cảm ơn và hẹn gặp trong ngày chung vui.",
+    "footer.message":
+      "Sự hiện diện của quý vị là niềm vinh hạnh cho gia đình chúng tôi.",
     "credits.open":
       'Ảnh &amp; âm nhạc <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
     "credits.title": "Ảnh &amp; âm nhạc",
@@ -183,6 +188,7 @@ const translations = {
     "calendar.saved": "Mở tệp lịch vừa tải để lưu ngày hẹn của chúng mình nhé.",
     "rsvp.unavailable": "Phiếu xác nhận chưa sẵn sàng. Vui lòng thử lại sau.",
     "rsvp.requiredName": "Vui lòng nhập họ và tên.",
+    "rsvp.requiredSide": "Vui lòng chọn khách nhà gái hoặc khách nhà trai.",
     "rsvp.offline":
       "Chưa có kết nối mạng. Thông tin vẫn được giữ trong form; vui lòng thử lại khi có mạng.",
     "rsvp.sending": "Đang gửi xác nhận…",
@@ -217,8 +223,8 @@ const translations = {
     "family.groomNames": "Mr. Nguyễn Thành Đô<br />Mrs. Nguyễn Diệu Hương Ly",
     "family.brideNames": "Mr. Nguyễn Mạnh Hùng<br />Mrs. Nguyễn Thu Hương",
     "invitation.label": "TOGETHER WITH OUR FAMILIES",
-    "invitation.guest": "Our dear family & friends",
-    "invitation.note": "You are warmly invited to celebrate the wedding of",
+    "invitation.guest": "Our honoured guests",
+    "invitation.note": "Join our two families in celebrating the wedding of",
     "invitation.date": "07 NOV 2026",
     "invitation.arrival": "GUEST ARRIVAL FROM 5:15 PM",
     "invitation.lunar": "29th day of the 9th lunar month · Year of the Horse",
@@ -285,6 +291,9 @@ const translations = {
       'Open the RSVP form <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
     "rsvp.eyebrow": "A NOTE FOR THE TWO OF US",
     "rsvp.name": "Full name",
+    "rsvp.side": "You are:",
+    "rsvp.brideGuest": "A guest of the bride’s family",
+    "rsvp.groomGuest": "A guest of the groom’s family",
     "rsvp.attendance": "Will you be joining us?",
     "rsvp.yes": "Joyfully accepts",
     "rsvp.no": "Regretfully declines",
@@ -299,8 +308,7 @@ const translations = {
     "rsvp.thanks": "Thank you for your love and warm wishes for Ly & Ngọc.",
     "rsvp.support":
       'Open the form if you need help <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
-    "footer.message":
-      "With heartfelt thanks. We look forward to celebrating together.",
+    "footer.message": "Your presence is an honour for our families.",
     "credits.open":
       'Photos & music <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
     "credits.title": "Photos & music",
@@ -383,6 +391,8 @@ const translations = {
     "rsvp.unavailable":
       "RSVP is currently unavailable. Please try again later.",
     "rsvp.requiredName": "Please enter your full name.",
+    "rsvp.requiredSide":
+      "Please select the bride’s family or the groom’s family.",
     "rsvp.offline":
       "You are offline. Your details are still in the form; please try again when you are connected.",
     "rsvp.sending": "Sending your RSVP…",

@@ -72,10 +72,10 @@
       rel="stylesheet"
     />
     <link rel="preload" as="image" href="assets/edited/cover.jpg" />
-    <link rel="stylesheet" href="styles.css?v=20261005-bilingual-icons" />
+    <link rel="stylesheet" href="styles.css?v=20261006-guest-side" />
     <script src="rsvp-config.js?v=20261005-rsvp" defer=""></script>
-    <script src="i18n.js?v=20261005-bilingual-icons" defer=""></script>
-    <script src="script.js?v=20261005-bilingual-icons" defer=""></script>
+    <script src="i18n.js?v=20261006-guest-side" defer=""></script>
+    <script src="script.js?v=20261006-guest-side" defer=""></script>
   </head>
   <body>
     <a class="skip-link" href="#main" data-i18n="skip">Đến nội dung chính</a>
@@ -354,10 +354,10 @@
                 id="guest-dedication"
                 data-i18n="invitation.guest"
               >
-                Những người thân yêu
+                Khách quý
               </p>
               <p class="card-note" data-i18n="invitation.note">
-                Đến chung vui trong ngày cưới của
+                Đến chung vui cùng hai gia đình chúng tôi trong ngày cưới của
               </p>
               <h3>Thế Ngọc <i>&amp;</i> Hương Ly</h3>
               <div class="card-date">
@@ -382,6 +382,10 @@
                 loading="lazy"
                 data-i18n-alt="alt.hotel"
               />
+              <p class="card-honor" data-i18n="footer.message">
+                Sự hiện diện của quý vị là niềm vinh hạnh cho gia đình chúng
+                tôi.
+              </p>
             </div>
           </article>
         </div>
@@ -830,6 +834,17 @@
                 data-i18n-placeholder="rsvp.namePlaceholder"
               />
               <fieldset>
+                <legend data-i18n="rsvp.side">Bạn là:</legend>
+                <label class="radio-option">
+                  <input type="radio" name="side" value="bride" required="" />
+                  <span data-i18n="rsvp.brideGuest">Khách nhà gái</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="side" value="groom" required="" />
+                  <span data-i18n="rsvp.groomGuest">Khách nhà trai</span>
+                </label>
+              </fieldset>
+              <fieldset>
                 <legend data-i18n="rsvp.attendance">Xác nhận tham dự</legend>
                 <label class="radio-option"
                   ><input
@@ -920,7 +935,7 @@
     <footer>
       <a class="footer-top" href="#home">L <i>&amp;</i> N</a>
       <p data-i18n="footer.message">
-        Trân trọng cảm ơn và hẹn gặp trong ngày chung vui.
+        Sự hiện diện của quý vị là niềm vinh hạnh cho gia đình chúng tôi.
       </p>
       <button id="open-credits" data-i18n="credits.open">
         Ảnh &amp; âm nhạc

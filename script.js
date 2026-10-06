@@ -406,6 +406,16 @@ $("#guest-name").addEventListener("invalid", (event) => {
   if (!event.target.value.trim())
     event.target.setCustomValidity(t("rsvp.requiredName"));
 });
+const sideInputs = $$('input[name="side"]');
+sideInputs.forEach((input) => {
+  input.addEventListener("invalid", () => {
+    if (input.validity.valueMissing)
+      input.setCustomValidity(t("rsvp.requiredSide"));
+  });
+  input.addEventListener("change", () => {
+    sideInputs.forEach((sideInput) => sideInput.setCustomValidity(""));
+  });
+});
 
 function finishDeliveryView() {
   if (!sendingRsvp) return;
@@ -433,18 +443,24 @@ form.addEventListener("submit", (event) => {
     $("#guest-name").reportValidity();
     return;
   }
+  if (!form.reportValidity()) return;
   if (!navigator.onLine) {
     rsvpResult.hidden = false;
     setRsvpStatus("rsvp.offline");
     return;
   }
   const coming = form.elements.attendance.value === "yes";
+  // The current Google Form has no family-side field. Preserve the selection
+  // in its existing message column using stable Vietnamese values in both languages.
+  const side =
+    form.elements.side.value === "bride" ? "Khách nhà gái" : "Khách nhà trai";
+  const wish = $("#guest-wish").value.trim();
   const payload = {
     [rsvpTarget.entries.name]: name,
     [rsvpTarget.entries.attendance]: coming
       ? "Sẽ tham dự"
       : "Không thể tham dự",
-    [rsvpTarget.entries.wish]: $("#guest-wish").value.trim(),
+    [rsvpTarget.entries.wish]: `Bạn là: ${side}${wish ? `\n\n${wish}` : ""}`,
     fvv: "1",
     pageHistory: coming ? "0,1,2" : "0,2",
   };
@@ -496,6 +512,10 @@ function refreshLocalizedState() {
   if (lightbox.open) showPhoto(photoIndex);
   if ($("#guest-name").validity.customError)
     $("#guest-name").setCustomValidity(t("rsvp.requiredName"));
+  sideInputs.forEach((input) => {
+    if (input.validity.customError)
+      input.setCustomValidity(t("rsvp.requiredSide"));
+  });
   if (rsvpTarget) {
     const helpUrl = new URL(window.WEDDING_RSVP.formUrl);
     helpUrl.searchParams.set("hl", window.WEDDING_I18N.language);
