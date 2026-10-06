@@ -92,6 +92,8 @@ const translations = {
       "Trang phục lịch sự. Càng nhiều màu sắc, càng đẹp cho một khu vườn\n            tiệc cưới.",
     "dress.note": "Màu trắng, be và kem xin dành riêng cho cô dâu nhé.",
     "rsvp.title": "Ngày vui trọn vẹn,<br><em>bên người thân yêu.</em>",
+    "rsvp.honor":
+      "Sự hiện diện của quý vị là niềm vinh hạnh cho gia đình chúng tôi.",
     "rsvp.intro":
       "Mong nhận được lời xác nhận tham dự để gia đình chuẩn bị đón tiếp\n              chu đáo. Trân trọng cảm ơn những tình cảm và lời chúc dành cho Ly\n              &amp; Ngọc.",
     "rsvp.nojs":
@@ -285,6 +287,7 @@ const translations = {
       "Please wear elegant attire. Colourful outfits are welcome at our garden celebration.",
     "dress.note": "Please reserve white, beige and cream for the bride.",
     "rsvp.title": "Our day is complete,<br /><em>with our loved ones.</em>",
+    "rsvp.honor": "Your presence would be a great honour to our families.",
     "rsvp.intro":
       "Please let us know if you can join us so our families can prepare a warm welcome. Thank you for all your love and wishes for Ly & Ngọc.",
     "rsvp.nojs":
