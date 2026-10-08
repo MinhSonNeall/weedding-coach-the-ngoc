@@ -22,14 +22,14 @@ XOÀI STUDIO — ảnh do chủ nhân chỉ định, chỉ sử dụng bộ đã
 Dùng ảnh vườn, đồng cỏ, trời xanh hợp moodboard; crop bằng CSS.
 
 NHẠC
-“một đời” — 14 Casper, Bon Nghiêm, feat. buitruonglinh.
-Phiên bản được người dùng xác nhận trong hội thoại.
-Kênh phát hành: https://bfan.link/mot-doi
-Official video: https://www.youtube.com/watch?v=JgTZvDbaTtg
-Nguồn nghe được trang phát hành liên kết:
-https://www.nhaccuatui.com/bai-hat/mot-doi-14-casper-bon-nghiem.ESFq1iGH8zTQ.html
-assets/mot-doi.mp3: âm thanh công khai từ trang bài hát, lấy cho bản xem thử
-người dùng yêu cầu. Quyền tác phẩm thuộc chủ sở hữu âm nhạc.
+“Giải cứu thế giới” · Full Demo.
+Nguồn đúng video người dùng yêu cầu ngày 08.10.2026:
+https://www.youtube.com/watch?v=VGZFE1jTZgY
+Tiêu đề video: Giải cứu thế giới | Full Demo | Hot Tiktok + Lyrics.
+Kênh đăng: Đã từng bên nhau - Trại Đa ngôn ngữ.
+assets/giai-cuu-the-gioi.m4a: bản âm thanh đầy đủ từ video trên,
+AAC trong container M4A, giữ nguyên âm thanh, không cắt hoặc đổi tốc độ.
+Quyền tác phẩm thuộc chủ sở hữu âm nhạc.
 Trang thử tự phát, âm lượng 40%, lặp lại; nhớ tạm dừng và vị trí nghe.
 Autoplay có âm thanh phụ thuộc quyền trình duyệt. Khi bị chặn, lần chạm/nhấn phím
 đầu tiên trên trang bắt đầu nhạc, không cần bấm riêng nút nhạc.

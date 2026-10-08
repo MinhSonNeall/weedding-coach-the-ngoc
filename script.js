@@ -33,7 +33,7 @@ function writeStorage(kind, key, value) {
 const audio = $("#background-music");
 const musicButton = $("#music-toggle");
 const musicKey = "ly-ngoc-music-enabled-v1";
-const positionKey = "ly-ngoc-mot-doi-position-v1";
+const positionKey = "ly-ngoc-giai-cuu-the-gioi-position-v1";
 let musicEnabled = readStorage("localStorage", musicKey) !== "false";
 let starting = false;
 let audioFailed = false;
@@ -53,7 +53,7 @@ function musicState(playing, blocked = false) {
     : blocked
       ? t("music.blocked")
       : playing
-        ? "14 Casper · Bon Nghiêm · buitruonglinh"
+        ? "Full Demo"
         : t("music.paused");
 }
 async function startMusic() {

@@ -124,10 +124,9 @@ const translations = {
       'Ảnh &amp; âm nhạc <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
     "credits.title": "Ảnh &amp; âm nhạc",
     "credits.photo": "Ảnh cưới: XOÀI STUDIO · Ly &amp; Ngọc.",
-    "credits.music":
-      "Nhạc nền: “một đời” — 14 Casper, Bon Nghiêm, buitruonglinh.",
+    "credits.music": "Nhạc nền: “Giải cứu thế giới” · Full Demo.",
     "credits.listen":
-      'Nghe trên kênh phát hành chính thức <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
+      'Nghe bản nhạc trên YouTube <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
     "credits.art": "Monogram và minh họa: từ thiệp cưới của Ly &amp; Ngọc.",
     "a11y.brand": "Thế Ngọc và Hương Ly, đầu trang",
     "a11y.nav": "Điều hướng chính",
@@ -175,8 +174,8 @@ const translations = {
     "language.label": "Chọn ngôn ngữ",
     "menu.open": "Mở menu",
     "menu.close": "Đóng menu",
-    "music.play": "Bật nhạc một đời",
-    "music.pause": "Tạm dừng nhạc một đời",
+    "music.play": "Bật nhạc Giải cứu thế giới",
+    "music.pause": "Tạm dừng nhạc Giải cứu thế giới",
     "music.error": "Nhạc chưa tải được · chạm để thử lại",
     "music.blocked": "Chạm vào thiệp để nhạc vang lên",
     "music.paused": "Đã tạm dừng · chạm để nghe tiếp",
@@ -316,10 +315,9 @@ const translations = {
       'Photos & music <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
     "credits.title": "Photos & music",
     "credits.photo": "Wedding photography: XOÀI STUDIO · Ly & Ngọc.",
-    "credits.music":
-      "Background music: “một đời” — 14 Casper, Bon Nghiêm, buitruonglinh.",
+    "credits.music": "Background music: “Giải cứu thế giới” · Full Demo.",
     "credits.listen":
-      'Listen on the official release page <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
+      'Listen on YouTube <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
     "credits.art":
       "Monogram and illustrations from Ly & Ngọc’s wedding stationery.",
     "a11y.brand": "Thế Ngọc and Hương Ly, back to top",
@@ -377,8 +375,8 @@ const translations = {
     "language.label": "Choose language",
     "menu.open": "Open menu",
     "menu.close": "Close menu",
-    "music.play": "Play một đời",
-    "music.pause": "Pause một đời",
+    "music.play": "Play Giải cứu thế giới",
+    "music.pause": "Pause Giải cứu thế giới",
     "music.error": "Music could not load · tap to retry",
     "music.blocked": "Tap the invitation to enjoy the music",
     "music.paused": "Paused · tap to listen",
