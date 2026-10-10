@@ -149,20 +149,6 @@ window.matchMedia("(min-width: 801px)").addEventListener("change", (event) => {
 });
 
 const motion = matchMedia("(prefers-reduced-motion: reduce)");
-if ("IntersectionObserver" in window && !motion.matches) {
-  document.documentElement.classList.add("motion-ready");
-  const observer = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      }),
-    { threshold: 0.08 },
-  );
-  $$(".reveal").forEach((element) => observer.observe(element));
-}
 if ("IntersectionObserver" in window) {
   const sectionObserver = new IntersectionObserver(
     (entries) =>

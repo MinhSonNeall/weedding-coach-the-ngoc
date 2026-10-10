@@ -1591,14 +1591,52 @@ dialog::backdrop {
 }
 .motion-ready .reveal {
   opacity: 0;
-  transform: translateY(20px);
+  translate: 0 38px;
   transition:
-    opacity 0.75s,
-    transform 0.75s;
+    opacity 0.85s ease,
+    translate 1.05s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 .motion-ready .reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  translate: 0 0;
+}
+.hero-copy > :nth-child(2) {
+  --reveal-delay: 90ms;
+}
+.hero-copy > :nth-child(3) {
+  --reveal-delay: 180ms;
+}
+.hero-copy > :nth-child(4) {
+  --reveal-delay: 250ms;
+}
+.hero-copy > :nth-child(n + 5) {
+  --reveal-delay: 320ms;
+}
+.hero-collage {
+  --reveal-delay: 180ms;
+}
+.invitation-card,
+.venue-copy > :nth-child(2) {
+  --reveal-delay: 100ms;
+}
+.gallery-grid > :nth-child(3n + 2),
+.gift-card:nth-child(2) {
+  --reveal-delay: 120ms;
+}
+.gallery-grid > :nth-child(3n + 3) {
+  --reveal-delay: 240ms;
+}
+@media (max-width: 600px) {
+  .gallery-grid > :nth-child(n) {
+    --reveal-delay: 0ms;
+  }
+  .gallery-grid > :nth-child(2n) {
+    --reveal-delay: 100ms;
+  }
+  .gift-card:nth-child(2) {
+    --reveal-delay: 0ms;
+  }
 }
 @media (max-width: 1100px) {
   .container {
@@ -2856,7 +2894,7 @@ dialog::backdrop {
   }
   .motion-ready .reveal {
     opacity: 1;
-    transform: none;
+    translate: none;
   }
 }
 
@@ -2960,5 +2998,149 @@ html[lang="en"] .timeline time > span {
 @media (max-width: 1200px), (max-width: 1366px) and (pointer: coarse) {
   :root {
     --small-text-increase: 2px;
+  }
+}
+
+/* The LN seal opens into three orbiting dots and reforms once per cycle. */
+html.is-loading body {
+  overflow: hidden;
+}
+#page-loader {
+  color: var(--navy);
+  text-align: center;
+  transition:
+    opacity 0.6s ease,
+    visibility 0.6s;
+}
+html.is-unveiling #page-loader {
+  display: grid;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  place-items: center;
+  background: var(--paper);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.loader-content {
+  padding: 30px;
+  max-width: 100%;
+}
+.loader-emblem {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 164px;
+  height: 164px;
+  margin: 0 auto 33px;
+}
+.loader-orbit {
+  position: absolute;
+  inset: 0;
+  border: 1px solid #c9cec480;
+  border-radius: 50%;
+}
+.loader-orbit::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 1px solid transparent;
+  border-top-color: var(--olive);
+  border-right-color: var(--olive);
+  border-radius: 50%;
+  animation: spin 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+.loader-monogram {
+  width: 90px;
+  height: 87px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  animation: ln-logo-cycle 2s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+.loader-dots {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  opacity: 0;
+  animation: ln-dots-cycle 2s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+.loader-dots i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--navy);
+}
+.loader-dots i:nth-child(2) {
+  background: var(--olive);
+}
+.loader-dots i:nth-child(3) {
+  background: var(--blue);
+}
+.loader-names {
+  font-size: calc(12px + var(--small-text-increase));
+  letter-spacing: 4px;
+  font-weight: 500;
+}
+.loader-names span {
+  color: var(--olive);
+}
+.loader-caption {
+  margin-top: 15px;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--olive);
+}
+.loader-status {
+  display: block;
+  margin-top: 14px;
+  font-size: calc(11px + var(--small-text-increase));
+  color: var(--muted);
+}
+.loader-emblem.is-finished .loader-monogram,
+.loader-emblem.is-finished .loader-dots,
+.loader-emblem.is-finished .loader-orbit::before {
+  animation: none;
+}
+@keyframes ln-logo-cycle {
+  0%,
+  14% {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+  36%,
+  64% {
+    opacity: 0;
+    transform: rotate(180deg) scale(0.3);
+  }
+  86%,
+  100% {
+    opacity: 1;
+    transform: rotate(360deg) scale(1);
+  }
+}
+@keyframes ln-dots-cycle {
+  0%,
+  24% {
+    opacity: 0;
+    transform: rotate(0) scale(0.3);
+  }
+  42% {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+  62% {
+    opacity: 1;
+    transform: rotate(180deg) scale(1);
+  }
+  80%,
+  100% {
+    opacity: 0;
+    transform: rotate(360deg) scale(0.3);
   }
 }

@@ -60,6 +60,14 @@ Website đã xuất bản trên GitHub Pages.
 Cá nhân hóa lời mời: thêm ?to=Tên%20khách trên URL.
 Font: Google Fonts — Cormorant Garamond, Be Vietnam Pro, Great Vibes.
 
+CHUYỂN ĐỘNG VÀ MÀN HÌNH CHỜ
+experience.js điều khiển logo LN → ba chấm → LN, chu kỳ 2 giây.
+Chờ ảnh trên trang được giải mã, font và tệp nhạc được tải trước khi mở thiệp;
+kết thúc ở hình logo đầy đủ. Có giới hạn chờ khi mạng treo và phương án dự phòng
+nếu tệp JavaScript không tải được, tránh khóa khách ở màn hình chờ.
+Nội dung trượt lên và hiện dần một lần khi cuộn tới; giữ góc nghiêng của thiệp.
+Tôn trọng cài đặt giảm chuyển động và vẫn hiện nội dung khi JavaScript bị tắt.
+
 CHIA SẺ LINK
 Thông tin Open Graph và Twitter Card được khai báo trực tiếp trong HTML.
 Ảnh chia sẻ: assets/share/wedding-preview-v2.jpg, JPEG 1200 × 630.

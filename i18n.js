@@ -2,6 +2,8 @@
 const translations = {
   vi: {
     skip: "Đến nội dung chính",
+    "loading.message": "Một chút chờ đợi, một ngày thật thương.",
+    "loading.status": "Đang chuẩn bị thiệp mời…",
     "nav.invitation": "Lời mời",
     "nav.timeline": "Ngày hôm ấy",
     "nav.gallery": "Khoảnh khắc",
@@ -209,6 +211,8 @@ const translations = {
   },
   en: {
     skip: "Skip to main content",
+    "loading.message": "A little moment, a day full of love.",
+    "loading.status": "Preparing your invitation…",
     "nav.invitation": "Invitation",
     "nav.timeline": "Our day",
     "nav.gallery": "Our moments",
