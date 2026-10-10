@@ -116,6 +116,16 @@ const translations = {
     "rsvp.submit":
       'Gửi xác nhận <svg class="icon"><use href="#arrow"></use></svg>',
     "rsvp.thanks": "Cảm ơn những tình cảm và lời chúc dành cho Ly &amp; Ngọc.",
+    "gifts.title": "Hộp <em>mừng cưới.</em>",
+    "gifts.intro": "Trân trọng cảm ơn những tình cảm dành cho Ly &amp; Ngọc.",
+    "gifts.bride": "Nhà gái",
+    "gifts.groom": "Nhà trai",
+    "gifts.openBride": "Xem ảnh QR nhà gái — Nguyễn Hương Ly",
+    "gifts.openGroom": "Xem ảnh QR nhà trai — Nguyễn Thế Ngọc",
+    "gifts.altBride": "Mã QR mừng cưới nhà gái — Nguyễn Hương Ly, TPBank",
+    "gifts.altGroom": "Mã QR mừng cưới nhà trai — Nguyễn Thế Ngọc, TPBank",
+    "gifts.saveBride": "Lưu QR nhà gái",
+    "gifts.saveGroom": "Lưu QR nhà trai",
     "rsvp.support":
       'Mở biểu mẫu nếu cần hỗ trợ <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
     "footer.message":
@@ -308,6 +318,18 @@ const translations = {
     "rsvp.wish": "A little love for the happy couple",
     "rsvp.submit": 'Send RSVP <svg class="icon"><use href="#arrow" /></svg>',
     "rsvp.thanks": "Thank you for your love and warm wishes for Ly & Ngọc.",
+    "gifts.title": "Wedding <em>gifts.</em>",
+    "gifts.intro": "With heartfelt thanks for all your love for Ly & Ngọc.",
+    "gifts.bride": "Bride’s family",
+    "gifts.groom": "Groom’s family",
+    "gifts.openBride": "View the bride’s QR image — Nguyễn Hương Ly",
+    "gifts.openGroom": "View the groom’s QR image — Nguyễn Thế Ngọc",
+    "gifts.altBride":
+      "Wedding gift QR for the bride’s family — Nguyễn Hương Ly, TPBank",
+    "gifts.altGroom":
+      "Wedding gift QR for the groom’s family — Nguyễn Thế Ngọc, TPBank",
+    "gifts.saveBride": "Save bride’s QR",
+    "gifts.saveGroom": "Save groom’s QR",
     "rsvp.support":
       'Open the form if you need help <svg class="inline-icon" aria-hidden="true" focusable="false"><use href="#arrow-up-right"></use></svg>',
     "footer.message": "Your presence is an honour for our families.",

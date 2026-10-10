@@ -21,6 +21,13 @@ XOÀI STUDIO — ảnh do chủ nhân chỉ định, chỉ sử dụng bộ đã
 Ảnh cục bộ: assets/edited/. Thông tin nguồn được lưu riêng ngoài kho công khai.
 Dùng ảnh vườn, đồng cỏ, trời xanh hợp moodboard; crop bằng CSS.
 
+QR MỪNG CƯỚI
+Hai ảnh gốc do chủ nhân cung cấp trong assets/qr/ ngày 10.10.2026.
+nha-gai.jpg: nhà gái — Nguyễn Hương Ly.
+nha-trai.jpg: nhà trai — Nguyễn Thế Ngọc.
+Hiển thị thành hai thẻ riêng, nhãn VI / EN và liên kết lưu đúng ảnh gốc.
+CSS căn phần thẻ ngân hàng trong ảnh nhà trai; không sửa dữ liệu mã QR.
+
 NHẠC
 “Giải cứu thế giới” · Full Demo.
 Nguồn đúng video người dùng yêu cầu ngày 08.10.2026:
